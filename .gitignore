@@ -94,3 +94,6 @@ freeline/
 freeline_project_description.json
 docs/~\$alisi dei requisiti\.docx
 docs~$cumento di analisi merge Matteo.docx
+*.tmp
+
+docs/~\$ano di Testing\.docx
