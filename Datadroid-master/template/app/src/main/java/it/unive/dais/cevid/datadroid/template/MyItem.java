@@ -34,4 +34,5 @@ public class MyItem implements ClusterItem {
         return mSnippet;
     }
 
+
 }

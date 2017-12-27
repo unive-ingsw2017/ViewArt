@@ -6,6 +6,7 @@ package it.unive.dais.cevid.datadroid.template;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,8 +51,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.ClusterManager.OnClusterClickListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -60,6 +65,7 @@ import it.unive.dais.cevid.datadroid.lib.parser.AsyncParser;
 import it.unive.dais.cevid.datadroid.lib.util.MapItem;
 
 import static it.unive.dais.cevid.datadroid.template.DatabaseStrings.*;
+
 /**
  * Questa classe è la componente principale del toolkit: fornisce servizi primari per un'app basata su Google Maps, tra cui localizzazione, pulsanti
  * di navigazione, preferenze ed altro. Essa rappresenta un template che è una buona pratica riusabile per la scrittura di app, fungendo da base
@@ -167,10 +173,7 @@ public class MapsActivity extends AppCompatActivity
         });
     }
 
-
     // ciclo di vita della app
-    //
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -432,18 +435,14 @@ public class MapsActivity extends AppCompatActivity
         gMap.setOnMapClickListener(this);
         gMap.setOnMapLongClickListener(this);
         gMap.setOnCameraMoveStartedListener(this);
-        gMap.setOnMarkerClickListener(this);
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.6, 12.0), 7));
         UiSettings uis = gMap.getUiSettings();
         uis.setZoomGesturesEnabled(true);
         uis.setMyLocationButtonEnabled(true);
         gMap.setOnMyLocationButtonClickListener(
-                new GoogleMap.OnMyLocationButtonClickListener() {
-                    @Override
-                    public boolean onMyLocationButtonClick() {
-                        gpsCheck();
-                        return false;
-                    }
+                () -> {
+                    gpsCheck();
+                    return false;
                 });
         uis.setCompassEnabled(true);
         uis.setZoomControlsEnabled(true);
@@ -452,6 +451,15 @@ public class MapsActivity extends AppCompatActivity
         applyMapSettings();
         mClusterManager = new ClusterManager<MyItem>(this, gMap);
 
+        mClusterManager.setOnClusterClickListener(new OnClusterClickListener<MyItem>() {
+            @Override
+            public boolean onClusterClick(Cluster<MyItem> cluster) {
+                Intent intent = new Intent(MapsActivity.this, DisambiguationActivity.class);
+//                intent.putExtra("marker", (Serializable) cluster);
+                startActivity(intent);
+                return false;
+            }
+        });
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
         gMap.setOnCameraIdleListener(mClusterManager);
@@ -607,79 +615,14 @@ public class MapsActivity extends AppCompatActivity
         Cursor cr = db.getDatabaseAccess().query("opere", null, null, null, null, null, null, null);
 
         cr.moveToFirst();
-        Log.d("split", String.format("INPUT: %s", cr.getCount()));
 
-        for (int i = 1; i < cr.getCount(); i++){
+        for (int i = 1; i < cr.getCount(); i++) {
             MyItem offsetItem = new MyItem(Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))), Double.parseDouble(cr.getString(cr.getColumnIndex(LON))), cr.getString(cr.getColumnIndex(TITOLO)), cr.getString(cr.getColumnIndex(AUTORE)));
             mClusterManager.addItem(offsetItem);
 
             cr.moveToNext();
         }
         cr.close();
-        /*for (int i = 1; i < 300; i++){
-            List<MapItem> l = new ArrayList<>();
-            l.add(new MapItem() {
-                @Override
-                public LatLng getPosition() {
-                    return new LatLng(Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))), Double.parseDouble(cr.getString(cr.getColumnIndex(LON))));
-                }
-
-                @Override
-                public String getTitle() {
-                    return cr.getString(cr.getColumnIndex(TITOLO));
-                }
-
-                @Override
-                public String getDescription() {
-                    return cr.getString(cr.getColumnIndex(AUTORE));
-                }
-
-                @Override
-                public int getId() {
-                    return cr.getInt(cr.getColumnIndex(ID));
-                }
-            });
-            putMarkersFromMapItems(l);
-            cr.moveToNext();
-        }
-        cr.close();/*
-
-
-        //Log.d("split", String.format("INPUT: %s", l.size()));
-        //markers = putMarkersFromMapItems(l);
-        /*try {
-            InputStream is = getResources().openRawResource(R.raw.veneto);
-            CsvRowParser p = new CsvRowParser(new InputStreamReader(is), true, ";");
-            List<CsvRowParser.Row> rows = p.getAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
-            for (final CsvRowParser.Row r : rows) {
-                Double lat = parse(r.get("lat"));
-                Double lon = parse(r.get("lon"));
-                db.save(r.get(0), r.get(1), r.get(2), r.get(3), r.get(4), r.get(5), r.get(6), r.get(7), r.get(8), r.get(9), r.get(10), r.get(11), r.get(12), r.get(13), r.get(14), r.get(15),  lat, lon);
-            }
-            List<MapItem> l = new ArrayList<>();
-            for (final CsvRowParser.Row r : rows) {
-                l.add(new MapItem() {
-                    @Override
-                    public LatLng getPosition() {
-                        String lat = r.get("Latitudine (WGS84)"), lng = r.get("Longitudine (WGS 84)");
-                        return new LatLng(Double.parseDouble(lat), Double.parseDouble(lng));
-                    }
-
-                    @Override
-                    public String getTitle() {
-                        return r.get("Codice");
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return r.get("Denominazione");
-                    }
-                });
-            }
-            markers = putMarkersFromMapItems(l);
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }*/
     }
 
     private Double parse(String s) {
@@ -688,6 +631,5 @@ public class MapsActivity extends AppCompatActivity
         s = s.replaceFirst("a", "");
         return Double.parseDouble(s);
     }
-
 
 }

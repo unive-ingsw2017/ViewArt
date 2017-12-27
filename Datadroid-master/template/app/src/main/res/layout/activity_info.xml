@@ -8,11 +8,11 @@
         android:id="@+id/imgView_1"
         android:layout_width="@dimen/img_info"
         android:layout_height="@dimen/img_info"
-        android:src="@mipmap/info_img"
-        android:padding="@dimen/info_padding"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/info_scrollView"
         android:layout_centerHorizontal="true"
-        android:alpha="0.5"/>
+        android:alpha="0.5"
+        android:padding="@dimen/info_padding"
+        android:src="@mipmap/info_img" />
         <ScrollView
             android:id="@+id/info_scrollView"
             android:layout_width="fill_parent"

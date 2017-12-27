@@ -5,44 +5,41 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.unive.dais.cevid.template.MapsActivity">
+    tools:context="it.unive.dais.cevid.datadroid.template.MapsActivity">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:weightSum="2"
         android:layout_width="@dimen/linear_layout_width"
         android:layout_height="@dimen/linear_layout_height"
         android:layout_gravity="start|bottom"
         android:layout_marginBottom="@dimen/linear_layout_margin_bottom"
         android:layout_marginLeft="@dimen/linear_layout_margin_left"
         android:gravity="start"
-        >
-
-
+        android:orientation="vertical"
+        android:weightSum="2">
 
 
         <ImageButton
             android:id="@+id/button_car"
-            android:scaleType="fitStart"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/trans"
-            android:src="@drawable/button_car"
-            android:visibility="invisible"
+            android:layout_marginTop="@dimen/button_margin"
             android:layout_weight="1"
-            android:layout_marginTop="@dimen/button_margin"/>
+            android:background="@color/trans"
+            android:scaleType="fitStart"
+            android:src="@drawable/button_car"
+            android:visibility="invisible" />
 
         <ImageButton
             android:id="@+id/button_here"
-            android:scaleType="fitStart"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/trans"
-            android:src="@drawable/button_here"
-            android:visibility="visible"
-            android:layout_weight="1"
             android:layout_marginTop="@dimen/button_margin"
-            />
+            android:layout_weight="1"
+            android:background="@color/trans"
+            android:scaleType="fitStart"
+            android:src="@drawable/button_here"
+            android:visibility="visible" />
+
 
     </LinearLayout>
 

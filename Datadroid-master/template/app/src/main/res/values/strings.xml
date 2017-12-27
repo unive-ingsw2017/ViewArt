@@ -38,4 +38,8 @@
     <string name="msg_permissions_not_granted">I permessi appena negati dall\'utente sono necessari per alcune funzionalità dell\'app. Il supporto delle funzionalità sarà ridotto.</string>
     <string name="marker_title">You are HERE</string>
 
+    <string name="action_settings">Settings</string>
+
+    <string name="no_data">No data</string>
+
 </resources>
