@@ -450,12 +450,13 @@ public class MapsActivity extends AppCompatActivity
 
         applyMapSettings();
         mClusterManager = new ClusterManager<MyItem>(this, gMap);
-
         mClusterManager.setOnClusterClickListener(new OnClusterClickListener<MyItem>() {
             @Override
             public boolean onClusterClick(Cluster<MyItem> cluster) {
                 Intent intent = new Intent(MapsActivity.this, DisambiguationActivity.class);
-//                intent.putExtra("marker", (Serializable) cluster);
+                ArrayList<MyItem> MyItemsArray = new ArrayList<>();
+                MyItemsArray.addAll(cluster.getItems());
+                intent.putExtra("items", MyItemsArray);
                 startActivity(intent);
                 return false;
             }
@@ -617,7 +618,7 @@ public class MapsActivity extends AppCompatActivity
         cr.moveToFirst();
 
         for (int i = 1; i < cr.getCount(); i++) {
-            MyItem offsetItem = new MyItem(Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))), Double.parseDouble(cr.getString(cr.getColumnIndex(LON))), cr.getString(cr.getColumnIndex(TITOLO)), cr.getString(cr.getColumnIndex(AUTORE)));
+            MyItem offsetItem = new MyItem(Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))), Double.parseDouble(cr.getString(cr.getColumnIndex(LON))), cr.getString(cr.getColumnIndex(TITOLO)), cr.getString(cr.getColumnIndex(AUTORE)), cr.getString(cr.getColumnIndex(IMG)));
             mClusterManager.addItem(offsetItem);
 
             cr.moveToNext();
