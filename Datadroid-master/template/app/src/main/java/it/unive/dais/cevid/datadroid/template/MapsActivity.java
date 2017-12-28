@@ -618,7 +618,26 @@ public class MapsActivity extends AppCompatActivity
         cr.moveToFirst();
 
         for (int i = 1; i < cr.getCount(); i++) {
-            MyItem offsetItem = new MyItem(Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))), Double.parseDouble(cr.getString(cr.getColumnIndex(LON))), cr.getString(cr.getColumnIndex(TITOLO)), cr.getString(cr.getColumnIndex(AUTORE)), cr.getString(cr.getColumnIndex(IMG)));
+            MyItem offsetItem = new MyItem(
+                    Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))),
+                    Double.parseDouble(cr.getString(cr.getColumnIndex(LON))),
+                    cr.getString(cr.getColumnIndex(IMG)),
+                    cr.getString(cr.getColumnIndex(BENE_CULTURALE)),
+                    cr.getString(cr.getColumnIndex(TITOLO)),
+                    cr.getString(cr.getColumnIndex(SOGGETTO)),
+                    cr.getString(cr.getColumnIndex(LOCALIZZAZIONE)),
+                    cr.getString(cr.getColumnIndex(DATAZIONE)),
+                    cr.getString(cr.getColumnIndex(AUTORE)),
+                    cr.getString(cr.getColumnIndex(MATERIA_TECNICA)),
+                    cr.getString(cr.getColumnIndex(MISURE)),
+                    cr.getString(cr.getColumnIndex(DEFINIZIONE)),
+                    cr.getString(cr.getColumnIndex(DENOMINAZIONE)),
+                    cr.getString(cr.getColumnIndex(CLASSIFICAZIONE)),
+                    cr.getString(cr.getColumnIndex(REGIONE)),
+                    cr.getString(cr.getColumnIndex(PROVINCIA)),
+                    cr.getString(cr.getColumnIndex(COMUNE)),
+                    cr.getString(cr.getColumnIndex(INDIRIZZO)));
+
             mClusterManager.addItem(offsetItem);
 
             cr.moveToNext();

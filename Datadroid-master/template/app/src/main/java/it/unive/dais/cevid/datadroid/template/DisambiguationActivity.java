@@ -1,9 +1,13 @@
 package it.unive.dais.cevid.datadroid.template;
 
 import android.app.Activity;
+import android.app.LauncherActivity;
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -28,14 +32,14 @@ public class DisambiguationActivity extends Activity {
         listView.setAdapter(new CustomAdapter(this, arrayItem));
 
 
-        /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                ListItem newsData = (ListItem) listView.getItemAtPosition(position);
-                Toast.makeText(MainActivity.this, "Selected :" + " " + newsData, Toast.LENGTH_LONG).show();
+                MyItem item = (MyItem) listView.getItemAtPosition(position);
+                Toast.makeText(DisambiguationActivity.this, "Selected :" + " " + item.getImgUrl(), Toast.LENGTH_LONG).show();
             }
-        });*/
+        });
     }
 
     @Override
