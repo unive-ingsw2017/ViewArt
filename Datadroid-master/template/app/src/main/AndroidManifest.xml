@@ -34,7 +34,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".activity.MapsActivity"
             android:label="@string/title_activity_maps" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -44,21 +44,21 @@
         </activity>
 
         <activity
-            android:name=".InfoActivity"
-            android:parentActivityName=".MapsActivity">
+            android:name=".activity.InfoActivity"
+            android:parentActivityName=".activity.MapsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MapsActivity" />
+                android:value=".activity.MapsActivity" />
         </activity>
 
         <activity
-            android:name=".SettingsActivity"
-            android:parentActivityName=".MapsActivity">
+            android:name=".activity.SettingsActivity"
+            android:parentActivityName=".activity.MapsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MapsActivity" />
+                android:value=".activity.MapsActivity" />
         </activity>
-        <activity android:name=".DisambiguationActivity" />
+        <activity android:name=".activity.DisambiguationActivity" />
 
     </application>
 
