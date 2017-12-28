@@ -50,8 +50,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.ClusterManager.OnClusterClickListener;
+import com.google.maps.android.clustering.ClusterManager.OnClusterItemClickListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -82,7 +84,7 @@ public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener {
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener,OnClusterClickListener<Opere>,OnClusterItemClickListener<Opere> {
 
     protected static final int REQUEST_CHECK_SETTINGS = 500;
     protected static final int PERMISSIONS_REQUEST_ACCESS_BOTH_LOCATION = 501;
@@ -433,7 +435,7 @@ public class MapsActivity extends AppCompatActivity
             gMap.setMyLocationEnabled(true);
         }
 
-        gMap.setOnMapClickListener(this);
+        //imposta i listener
         gMap.setOnMapLongClickListener(this);
         gMap.setOnCameraMoveStartedListener(this);
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.6, 12.0), 7));
@@ -451,16 +453,8 @@ public class MapsActivity extends AppCompatActivity
 
         applyMapSettings();
         mClusterManager = new ClusterManager<Opere>(this, gMap);
-        mClusterManager.setOnClusterClickListener(new OnClusterClickListener<Opere>() {
-            @Override
-            public boolean onClusterClick(Cluster<Opere> cluster) {
-                Intent intent = new Intent(MapsActivity.this, DisambiguationActivity.class);
-                myItemsArray.addAll(cluster.getItems());
-                //intent.putExtra("items", myItemsArray);
-                startActivity(intent);
-                return false;
-            }
-        });
+        mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterClickListener(this);
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
         gMap.setOnCameraIdleListener(mClusterManager);
@@ -652,4 +646,23 @@ public class MapsActivity extends AppCompatActivity
         return Double.parseDouble(s);
     }
 
+
+    /* gestione callback cluter*/
+
+    @Override
+    public boolean onClusterClick(Cluster<Opere> cluster) {
+        Intent intent = new Intent(MapsActivity.this, DisambiguationActivity.class);
+        myItemsArray.addAll(cluster.getItems());
+        //intent.putExtra("items", myItemsArray);
+        startActivity(intent);
+        return false;
+    }
+
+    @Override
+    public boolean onClusterItemClick(Opere o) {
+        Intent intent = new Intent(MapsActivity.this, DisambiguationActivity.class);
+
+        startActivity(intent);
+        return false;
+    }
 }

@@ -1,4 +1,4 @@
-package it.unive.dais.cevid.datadroid.template;
+package it.unive.dais.cevid.datadroid.template.database;
 
 public class DatabaseStrings {
     public static final String ID = "_id";
