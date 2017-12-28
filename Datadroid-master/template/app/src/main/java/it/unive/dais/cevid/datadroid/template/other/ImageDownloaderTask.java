@@ -15,10 +15,10 @@ import java.net.URL;
 import it.unive.dais.cevid.datadroid.template.R;
 
 
-class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
+public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
 
-    ImageDownloaderTask(ImageView imageView) {
+    public ImageDownloaderTask(ImageView imageView) {
         imageViewReference = new WeakReference<>(imageView);
     }
 

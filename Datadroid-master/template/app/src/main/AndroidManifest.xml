@@ -59,6 +59,7 @@
                 android:value=".activity.MapsActivity" />
         </activity>
         <activity android:name=".activity.DisambiguationActivity" />
+        <activity android:name=".activity.ItemInfoActivity" />
 
     </application>
 

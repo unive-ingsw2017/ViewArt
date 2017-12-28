@@ -50,7 +50,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.ClusterManager.OnClusterClickListener;
 import com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindowClickListener;
@@ -62,7 +61,7 @@ import java.util.concurrent.ExecutionException;
 
 import it.unive.dais.cevid.datadroid.lib.parser.AsyncParser;
 import it.unive.dais.cevid.datadroid.lib.util.MapItem;
-import it.unive.dais.cevid.datadroid.template.other.Opere;
+import it.unive.dais.cevid.datadroid.template.other.Opera;
 import it.unive.dais.cevid.datadroid.template.R;
 import it.unive.dais.cevid.datadroid.template.database.DbManager;
 
@@ -84,7 +83,7 @@ public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, OnClusterClickListener<Opere>, OnClusterItemInfoWindowClickListener<Opere> {
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, OnClusterClickListener<Opera>, OnClusterItemInfoWindowClickListener<Opera> {
 
     protected static final int REQUEST_CHECK_SETTINGS = 500;
     protected static final int PERMISSIONS_REQUEST_ACCESS_BOTH_LOCATION = 501;
@@ -122,9 +121,9 @@ public class MapsActivity extends AppCompatActivity
     protected DbManager db = null;
 
 
-    private ClusterManager<Opere> mClusterManager;
+    private ClusterManager<Opera> mClusterManager;
 
-    public static ArrayList<Opere> myItemsArray = new ArrayList<>();
+    public static ArrayList<Opera> myItemsArray = new ArrayList<>();
     /**
      * Questo metodo viene invocato quando viene inizializzata questa activity.
      * Si tratta di una sorta di "main" dell'intera activity.
@@ -453,7 +452,7 @@ public class MapsActivity extends AppCompatActivity
         uis.setMapToolbarEnabled(true);
 
         applyMapSettings();
-        mClusterManager = new ClusterManager<Opere>(this, gMap);
+        mClusterManager = new ClusterManager<Opera>(this, gMap);
         //mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
@@ -617,7 +616,7 @@ public class MapsActivity extends AppCompatActivity
         cr.moveToFirst();
 
         for (int i = 1; i < cr.getCount(); i++) {
-            Opere offsetItem = new Opere(
+            Opera offsetItem = new Opera(
                     Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))),
                     Double.parseDouble(cr.getString(cr.getColumnIndex(LON))),
                     cr.getString(cr.getColumnIndex(IMG)),
@@ -655,17 +654,17 @@ public class MapsActivity extends AppCompatActivity
     /* gestione callback cluster*/
 
     @Override
-    public boolean onClusterClick(Cluster<Opere> cluster) {
+    public boolean onClusterClick(Cluster<Opera> cluster) {
         Intent intent = new Intent(MapsActivity.this, DisambiguationActivity.class);
         myItemsArray.addAll(cluster.getItems());
-        //intent.putExtra("items", myItemsArray);
         startActivity(intent);
         return false;
     }
 
     @Override
-    public void onClusterItemInfoWindowClick(Opere opere) {
+    public void onClusterItemInfoWindowClick(Opera opera) {
         Intent intent = new Intent(MapsActivity.this, ItemInfoActivity.class);
+        intent.putExtra("item",opera);
         startActivity(intent);
     }
 }

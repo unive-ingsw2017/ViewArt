@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import it.unive.dais.cevid.datadroid.template.R;
 
 public class CustomAdapter extends BaseAdapter {
-    private ArrayList<Opere> arrayItem;
+    private ArrayList<Opera> arrayItem;
     private LayoutInflater layoutInflater;
 
-    public CustomAdapter(Context context, ArrayList<Opere> arrayItem) {
+    public CustomAdapter(Context context, ArrayList<Opera> arrayItem) {
         this.arrayItem = arrayItem;
         layoutInflater = LayoutInflater.from(context);
         //MapsActivity.myItemsArray.clear();
