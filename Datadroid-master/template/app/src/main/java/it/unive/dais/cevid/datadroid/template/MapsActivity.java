@@ -122,6 +122,7 @@ public class MapsActivity extends AppCompatActivity
 
     private ClusterManager<MyItem> mClusterManager;
 
+    public static ArrayList<MyItem> MyItemsArray = new ArrayList<>();
     /**
      * Questo metodo viene invocato quando viene inizializzata questa activity.
      * Si tratta di una sorta di "main" dell'intera activity.
@@ -454,9 +455,8 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public boolean onClusterClick(Cluster<MyItem> cluster) {
                 Intent intent = new Intent(MapsActivity.this, DisambiguationActivity.class);
-                ArrayList<MyItem> MyItemsArray = new ArrayList<>();
                 MyItemsArray.addAll(cluster.getItems());
-                intent.putExtra("items", MyItemsArray);
+                //intent.putExtra("items", MyItemsArray);
                 startActivity(intent);
                 return false;
             }

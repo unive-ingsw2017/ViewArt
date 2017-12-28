@@ -16,12 +16,14 @@ import java.net.URL;
 class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
     private final WeakReference<ImageView> imageViewReference;
 
-    public ImageDownloaderTask(ImageView imageView) {
-        imageViewReference = new WeakReference<ImageView>(imageView);
+    ImageDownloaderTask(ImageView imageView) {
+        imageViewReference = new WeakReference<>(imageView);
     }
 
     @Override
     protected Bitmap doInBackground(String... params) {
+        if(params[0]  == null ||params[0].equals(""))
+            Log.e("ImageDownloader", "url vuoto");
         return downloadBitmap(params[0]);
     }
 
@@ -31,17 +33,17 @@ class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
             bitmap = null;
         }
 
-        if (imageViewReference != null) {
-            ImageView imageView = imageViewReference.get();
-            if (imageView != null) {
-                if (bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
-                } else {
-                    Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.button_car); //TODO : rotellina
-                    imageView.setImageDrawable(placeholder);
-                }
+        ImageView imageView = imageViewReference.get();
+
+        if (imageView != null) {
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+                Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.button_car);
+                imageView.setImageDrawable(placeholder);
             }
         }
+
     }
 
     private Bitmap downloadBitmap(String url) {
@@ -49,23 +51,22 @@ class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
         try {
             URL uri = new URL(url);
             urlConnection = (HttpURLConnection) uri.openConnection();
-            int statusCode = urlConnection.getResponseCode();
-            if (statusCode != HttpURLConnection.HTTP_OK) {
+
+            if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK)
                 return null;
-            }
 
             InputStream inputStream = urlConnection.getInputStream();
-            if (inputStream != null) {
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                return bitmap;
-            }
+
+            if (inputStream != null)
+                return BitmapFactory.decodeStream(inputStream);
+
         } catch (Exception e) {
-            urlConnection.disconnect();
-            Log.w("ImageDownloader", "Error downloading image from " + url);
+
+            Log.e("ImageDownloader", url + "  " + e);
+
         } finally {
-            if (urlConnection != null) {
+            if (urlConnection != null)
                 urlConnection.disconnect();
-            }
         }
         return null;
     }

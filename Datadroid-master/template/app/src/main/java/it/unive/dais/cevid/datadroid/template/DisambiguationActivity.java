@@ -1,9 +1,8 @@
 package it.unive.dais.cevid.datadroid.template;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -11,24 +10,22 @@ import java.util.ArrayList;
 
 public class DisambiguationActivity extends Activity {
 
+    ListView listView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_disambiguation);
 
-        ArrayList<MyItem> a = getIntent().getParcelableArrayListExtra("items");
+        ArrayList<MyItem> arrayItem = new ArrayList<>();
+        arrayItem.addAll(MapsActivity.MyItemsArray);
+        MapsActivity.MyItemsArray.clear();
 
-        ArrayList<String> info = new ArrayList<>();
-        ArrayList<String> url = new ArrayList<>();
+        //ArrayList<MyItem> arrayItem = getIntent().getParcelableArrayListExtra("items");
 
-        for (MyItem i : a) {
-            info.add(i.getTitle() + " " + i.getSnippet());
-            url.add(i.getUrl());
-        }
+        listView = (ListView) findViewById(R.id.custom_list);
 
-        final ListView listView = (ListView) findViewById(R.id.custom_list);
-        listView.setAdapter(new CustomAdapter(this, info, url));
+        listView.setAdapter(new CustomAdapter(this, arrayItem));
 
 
         /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -39,10 +36,13 @@ public class DisambiguationActivity extends Activity {
                 Toast.makeText(MainActivity.this, "Selected :" + " " + newsData, Toast.LENGTH_LONG).show();
             }
         });*/
-
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        listView.destroyDrawingCache();
+    }
 }
 
 
