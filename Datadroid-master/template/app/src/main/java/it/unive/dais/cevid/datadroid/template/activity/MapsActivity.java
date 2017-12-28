@@ -53,7 +53,7 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.ClusterManager.OnClusterClickListener;
-import com.google.maps.android.clustering.ClusterManager.OnClusterItemClickListener;
+import com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindowClickListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -84,7 +84,7 @@ public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener,OnClusterClickListener<Opere>,OnClusterItemClickListener<Opere> {
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, OnClusterClickListener<Opere>, OnClusterItemInfoWindowClickListener<Opere> {
 
     protected static final int REQUEST_CHECK_SETTINGS = 500;
     protected static final int PERMISSIONS_REQUEST_ACCESS_BOTH_LOCATION = 501;
@@ -429,13 +429,14 @@ public class MapsActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
 
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_BOTH_LOCATION);
         } else {
             gMap.setMyLocationEnabled(true);
         }
 
-        //imposta i listener
+        //imposta i listener della google map
         gMap.setOnMapLongClickListener(this);
         gMap.setOnCameraMoveStartedListener(this);
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.6, 12.0), 7));
@@ -453,12 +454,14 @@ public class MapsActivity extends AppCompatActivity
 
         applyMapSettings();
         mClusterManager = new ClusterManager<Opere>(this, gMap);
-        mClusterManager.setOnClusterItemClickListener(this);
+        //mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterClickListener(this);
+        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
         gMap.setOnCameraIdleListener(mClusterManager);
         gMap.setOnMarkerClickListener(mClusterManager);
+        gMap.setOnInfoWindowClickListener(mClusterManager);
 
         demo();
     }
@@ -470,6 +473,7 @@ public class MapsActivity extends AppCompatActivity
         if (gMap != null) {
             Log.d(TAG, "applying map settings");
             gMap.setMapType(SettingsActivity.getMapStyle(this));
+            gMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
         setHereButtonVisibility();
     }
@@ -517,6 +521,7 @@ public class MapsActivity extends AppCompatActivity
         });
         return false;
     }
+
 
     /**
      * Metodo di utilità che permette di posizionare rapidamente sulla mappa una lista di MapItem.
@@ -647,7 +652,7 @@ public class MapsActivity extends AppCompatActivity
     }
 
 
-    /* gestione callback cluter*/
+    /* gestione callback cluster*/
 
     @Override
     public boolean onClusterClick(Cluster<Opere> cluster) {
@@ -659,10 +664,8 @@ public class MapsActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onClusterItemClick(Opere o) {
-        Intent intent = new Intent(MapsActivity.this, DisambiguationActivity.class);
-
+    public void onClusterItemInfoWindowClick(Opere opere) {
+        Intent intent = new Intent(MapsActivity.this, ItemInfoActivity.class);
         startActivity(intent);
-        return false;
     }
 }

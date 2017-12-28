@@ -9,7 +9,7 @@ import com.google.maps.android.clustering.ClusterItem;
 import java.io.Serializable;
 
 
-public class Opere implements ClusterItem, Serializable, Parcelable {
+public class Opere implements ClusterItem {
     private LatLng position;
     private String img;
     private String bene_culturale;
@@ -48,64 +48,6 @@ public class Opere implements ClusterItem, Serializable, Parcelable {
         this.indirizzo = indirizzo;
     }
 
-    protected Opere(Parcel in) {
-        position = in.readParcelable(LatLng.class.getClassLoader());
-        img = in.readString();
-        bene_culturale = in.readString();
-        titolo = in.readString();
-        soggetto = in.readString();
-        localizzazione = in.readString();
-        datazione = in.readString();
-        autore = in.readString();
-        materia_tecnica = in.readString();
-        misure = in.readString();
-        definizione = in.readString();
-        denominazione = in.readString();
-        classificazione = in.readString();
-        regione = in.readString();
-        provincia = in.readString();
-        comune = in.readString();
-        indirizzo = in.readString();
-    }
-
-
-    public static final Creator<Opere> CREATOR = new Creator<Opere>() {
-        @Override
-        public Opere createFromParcel(Parcel in) {
-            return new Opere(in);
-        }
-
-        @Override
-        public Opere[] newArray(int size) {
-            return new Opere[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(position, flags);
-        dest.writeString(img);
-        dest.writeString(bene_culturale);
-        dest.writeString(titolo);
-        dest.writeString(soggetto);
-        dest.writeString(localizzazione);
-        dest.writeString(datazione);
-        dest.writeString(autore);
-        dest.writeString(materia_tecnica);
-        dest.writeString(misure);
-        dest.writeString(definizione);
-        dest.writeString(denominazione);
-        dest.writeString(classificazione);
-        dest.writeString(regione);
-        dest.writeString(provincia);
-        dest.writeString(comune);
-        dest.writeString(indirizzo);
-    }
 
     @Override
     public LatLng getPosition() {
@@ -114,7 +56,10 @@ public class Opere implements ClusterItem, Serializable, Parcelable {
 
     @Override
     public String getTitle() {
-        return titolo;
+        if (titolo == null || titolo.equals(""))
+            return "no title";
+        else
+            return titolo;
     }
 
     @Override
