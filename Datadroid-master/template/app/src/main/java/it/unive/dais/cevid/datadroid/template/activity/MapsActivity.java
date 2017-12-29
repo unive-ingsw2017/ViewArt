@@ -203,7 +203,7 @@ public class MapsActivity extends AppCompatActivity
 
     private void updateOpere(String old_autore , String old_datazione, String id) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(AUTORE,old_autore.replaceAll("[^a-zA-Z 'èéùòàì/]*",""));
+        contentValues.put(AUTORE,old_autore.replaceAll("[^a-zA-Z 'èéùòàì]|I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|XVI|XVII|XVIII|XIX|XX|XXI| notizie| sec| secc| fino| al| cc| canotizie| ca| prima| metà|  |   |   | post| capost| fine| inizio]",""));
         contentValues.put(DATAZIONE,old_datazione.replaceAll("[^XVI /]","")+ " Secolo");
         db.getDatabaseAccess().update( "opere",contentValues ,(ID + " =" + id),null);
     }
