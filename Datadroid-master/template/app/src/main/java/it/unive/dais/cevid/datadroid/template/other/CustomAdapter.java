@@ -22,7 +22,6 @@ public class CustomAdapter extends BaseAdapter {
     public CustomAdapter(Context context, ArrayList<Opera> arrayItem) {
         this.arrayItem = arrayItem;
         layoutInflater = LayoutInflater.from(context);
-        //MapsActivity.myItemsArray.clear();
     }
 
     @Override

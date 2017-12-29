@@ -118,7 +118,7 @@ public class MapsActivity extends AppCompatActivity
     /**
      * Creo un database manager per la gestione delle informazioni
      */
-    protected DbManager db = null;
+    public static DbManager db = null;
 
 
     private ClusterManager<Opera> mClusterManager;
@@ -655,7 +655,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public boolean onClusterClick(Cluster<Opera> cluster) {
-        Intent intent = new Intent(MapsActivity.this, DisambiguationActivity.class);
+        Intent intent = new Intent(MapsActivity.this, FilterActivity.class);
         myItemsArray.addAll(cluster.getItems());
         startActivity(intent);
         return false;
