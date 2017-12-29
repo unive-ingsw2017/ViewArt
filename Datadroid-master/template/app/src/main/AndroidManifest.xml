@@ -60,6 +60,7 @@
         </activity>
         <activity android:name=".activity.DisambiguationActivity" />
         <activity android:name=".activity.ItemInfoActivity" />
+        <activity android:name=".activity.FilterActivity" />
 
     </application>
 

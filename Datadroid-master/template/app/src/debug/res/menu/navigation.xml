@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_autore"
+        android:icon="@drawable/autore"
+        android:title="@string/autore" />
+
+    <item
+        android:id="@+id/navigation_tipologia"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/tipologia" />
+
+    <item
+        android:id="@+id/navigation_data"
+        android:icon="@drawable/data"
+        android:title="@string/data" />
+
+</menu>
