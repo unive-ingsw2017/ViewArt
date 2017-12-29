@@ -6,6 +6,7 @@ package it.unive.dais.cevid.datadroid.template.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -139,6 +140,7 @@ public class MapsActivity extends AppCompatActivity
         //apri connessione con database
         db = new DbManager(this);
 
+        updateOpereaux();
         // inizializza le preferenze
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -173,6 +175,37 @@ public class MapsActivity extends AppCompatActivity
                     Log.d(TAG, "no current position available");
             }
         });
+    }
+
+    private void updateOpereaux() {
+        Cursor cr = db.getDatabaseAccess().query(false, "opere", null , null,null,null,null, null, null);
+
+        cr.moveToFirst();
+        ArrayList<String> buffer = new ArrayList<>();
+        String autore,datazione,id;
+        for (int i = 1; i <= cr.getCount(); i++){
+            autore=cr.getString(cr.getColumnIndex(AUTORE));
+            datazione=cr.getString(cr.getColumnIndex(DATAZIONE));
+            id=cr.getString(cr.getColumnIndex(ID));
+            if (autore ==null)
+                autore="";
+            if (datazione ==null)
+                datazione="";
+
+
+
+            updateOpere(autore,datazione,id);
+            cr.moveToNext();
+        }
+        cr.close();
+
+    }
+
+    private void updateOpere(String old_autore , String old_datazione, String id) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(AUTORE,old_autore.replaceAll("[^ a-zA-Z]","") + "aut" );
+        contentValues.put(DATAZIONE,old_datazione.replaceAll("[^XVI \\/]","")+ " Secolo");
+        db.getDatabaseAccess().update( "opere",contentValues ,(ID + " =" + id),null);
     }
 
     // ciclo di vita della app
