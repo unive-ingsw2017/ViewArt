@@ -94,7 +94,7 @@ public class FilterActivity extends AppCompatActivity {
         }
         cr.close();
         buffer.remove(0);
-        return new ArrayAdapter<> (this, android.R.layout.simple_list_item_checked, buffer);
+        return new ArrayAdapter<> (this, R.layout.checked_row, buffer);
     }
 
 }
