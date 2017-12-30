@@ -18,8 +18,13 @@ import java.util.ArrayList;
 import it.unive.dais.cevid.datadroid.template.R;
 
 import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.AUTORE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.AUTORI;
 import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.BENE_CULTURALE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.DATA;
 import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.DATAZIONE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.DATE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.TIPOLOGIA;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.TIPOLOGIE;
 
 public class FilterActivity extends AppCompatActivity {
 
@@ -60,13 +65,13 @@ public class FilterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_filter);
 
         autori = (ListView) findViewById(R.id.autori);
-        autori.setAdapter(retriveInformation(AUTORE, null));
+        autori.setAdapter(retriveInformation(AUTORI,AUTORE, null));
 
         date = (ListView) findViewById(R.id.date);
-        date.setAdapter(retriveInformation(DATAZIONE, null));
+        date.setAdapter(retriveInformation(DATE,DATA, null));
 
         tipologie = (ListView) findViewById(R.id.tipologie);
-        tipologie.setAdapter(retriveInformation(BENE_CULTURALE, null));
+        tipologie.setAdapter(retriveInformation(TIPOLOGIE,TIPOLOGIA, null));
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -83,8 +88,8 @@ public class FilterActivity extends AppCompatActivity {
 
     }
 
-    ListAdapter retriveInformation(String colonna, String filtro){
-        Cursor cr = MapsActivity.db.getDatabaseAccess().query(true, "opere", new String[] {colonna}, filtro,null,null,null, colonna, null);
+    ListAdapter retriveInformation(String tabella,String colonna, String filtro){
+        Cursor cr = MapsActivity.db.getDatabaseAccess().query( false,tabella, new String[] {colonna}, filtro,null,null,null, null, null);
 
         cr.moveToFirst();
         ArrayList<String> buffer = new ArrayList<>();

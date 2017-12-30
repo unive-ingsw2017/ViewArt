@@ -1,7 +1,15 @@
 package it.unive.dais.cevid.datadroid.template.database;
 
 public class DatabaseStrings {
-    //stringhe per opere
+    //nomi tabelle
+    public static final String OPERE = "opere";
+    public static final String AUTORI = "autori";
+    public static final String TIPOLOGIE = "tipologie";
+    public static final String DATE = "date";
+
+
+
+    //stringhe per attributi di opere
     public static final String ID = "_id";
     public static final String IMG = "img";
     public static final String BENE_CULTURALE = "bene_culturale";
@@ -22,7 +30,7 @@ public class DatabaseStrings {
     public static final String LAT = "lat";
     public static final String LON = "lon";
 
-    // stringhe per le tabelle autori,tipologie,date
+    // stringhe per gli attributi di autori,tipologie,date
     public static final String SELEZIONATO = "selezionato";
     public static final String TIPOLOGIA = "tipologia";
     public static final String DATA = "data";
