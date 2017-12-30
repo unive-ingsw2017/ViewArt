@@ -203,8 +203,17 @@ public class MapsActivity extends AppCompatActivity
 
     private void updateOpere(String old_autore , String old_datazione, String id) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(AUTORE,old_autore.replaceAll("[^a-zA-Z 'èéùòàì]|I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|XVI|XVII|XVIII|XIX|XX|XXI| notizie| sec| secc| fino| al| cc| canotizie| ca| prima| metà|  |   |   | post| capost| fine| inizio]",""));
-        contentValues.put(DATAZIONE,old_datazione.replaceAll("[^XVI /]","")+ " Secolo");
+        String v1=old_autore.replaceAll("[^a-zA-Z 'èéùòàì]","");
+        contentValues.put(AUTORE,v1.replaceAll("I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV|XV|XVI|XVII|XVIII|XIX|XX|XXI| notizie| sec| secc| fino| al| cc| canotizie| ca| prima| metà|  |   |   | post| capost| fine| inizio| dal| ante| notiziec]",""));
+        String s0=old_datazione.replaceAll("-","/");
+        String s1=s0.replaceAll("[^XVI/]","");
+        String s2=s1.replaceAll("  |   |    |    |      |       |        |/ |//|///|/ /","");
+        //controlla se sono secoli romani validi
+        if (s2.matches("(IX|IV|V?I{0,3})|(IX|IV|V?I{0,3})/(IX|IV|V?I{0,3})")==true)
+            contentValues.put(DATAZIONE,s2 + " Secolo");
+        else
+            contentValues.put(DATAZIONE,"Data assente o non valida");
+
         db.getDatabaseAccess().update( "opere",contentValues ,(ID + " =" + id),null);
     }
 
