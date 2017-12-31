@@ -1,7 +1,6 @@
 package it.unive.dais.cevid.datadroid.template.other;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +17,7 @@ import it.unive.dais.cevid.datadroid.template.R;
 public class CustomAdapter extends BaseAdapter {
     private ArrayList<Opera> arrayItem;
     private LayoutInflater layoutInflater;
+    ArrayList<AsyncTask> tasks = new ArrayList<>();
 
     public CustomAdapter(Context context, ArrayList<Opera> arrayItem) {
         this.arrayItem = arrayItem;
@@ -41,7 +41,7 @@ public class CustomAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        AsyncTask<String, Void, Bitmap> execute = null;
+
 
         if (convertView == null) {
             convertView = layoutInflater.inflate(R.layout.row, null);
@@ -61,14 +61,18 @@ public class CustomAdapter extends BaseAdapter {
         holder.infoView2.setText(arrayItem.get(position).getBene_culturale());
 
         if (holder.imageView != null) {
-            Log.e("dadss", arrayItem.get(position).getImgUrl());
-            execute = new ImageDownloaderTask(holder.imageView).execute("https://cc-media-foxit.fichub.com/image/floptv/276a97a2-3f7e-4ae9-8ff9-3b0d1546ffc9/immagini-avatar-whatsapp-17-maxw-600.jpg");
+            Log.e("downloading", arrayItem.get(position).getImgUrl());
+            tasks.add(new ImageDownloaderTask(holder.imageView)
+                    .execute("https://cc-media-foxit.fichub.com/image/floptv/276a97a2-3f7e-4ae9-8ff9-3b0d1546ffc9/immagini-avatar-whatsapp-17-maxw-600.jpg",
+                            "" + 4));
         }
 
-        if(holder.imageView.getTag() != null)
-            execute.cancel(true);
-
         return convertView;
+    }
+
+    public void terminateAsyncTasks(){
+        for (AsyncTask task : tasks)
+            task.cancel(true);
     }
 
     private static class ViewHolder {

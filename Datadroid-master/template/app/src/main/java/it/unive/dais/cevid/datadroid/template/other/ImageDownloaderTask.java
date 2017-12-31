@@ -7,7 +7,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -24,9 +26,9 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected Bitmap doInBackground(String... params) {
-        if(params[0]  == null ||params[0].equals(""))
+        if (params[0] == null || params[0].equals(""))
             Log.e("ImageDownloader", "url vuoto");
-        return downloadBitmap(params[0]);
+        return downloadBitmap(params[0], Integer.parseInt(params[1]));
     }
 
     @Override
@@ -48,7 +50,7 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
 
     }
 
-    private Bitmap downloadBitmap(String url) {
+    private Bitmap downloadBitmap(String url, int scale) {
         HttpURLConnection urlConnection = null;
         try {
             URL uri = new URL(url);
@@ -59,17 +61,24 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
 
             InputStream inputStream = urlConnection.getInputStream();
 
-            if (inputStream != null)
-                return BitmapFactory.decodeStream(inputStream);
+            if (inputStream != null) {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 2;
+                return BitmapFactory.decodeStream(inputStream, null, options);
+            }
 
-        } catch (Exception e) {
-
-            Log.e("ImageDownloader", url + "  " + e);
-
+        } catch (InterruptedIOException e) {
+            Log.e("PROCESSO INTERROTTO", e.toString());
+        } catch (IOException e) {
+            Log.e("PROBLEMA CON URL", e.toString());
+        } catch (OutOfMemoryError e) {
+            Log.e("MEMORIA", "memoria finita mentre stavo scaricando le immagini");
+            return null;
         } finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
         return null;
     }
+
 }
