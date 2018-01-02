@@ -6,7 +6,6 @@ package it.unive.dais.cevid.datadroid.template.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -22,6 +21,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -62,11 +62,28 @@ import java.util.concurrent.ExecutionException;
 
 import it.unive.dais.cevid.datadroid.lib.parser.AsyncParser;
 import it.unive.dais.cevid.datadroid.lib.util.MapItem;
-import it.unive.dais.cevid.datadroid.template.other.Opera;
 import it.unive.dais.cevid.datadroid.template.R;
 import it.unive.dais.cevid.datadroid.template.database.DbManager;
+import it.unive.dais.cevid.datadroid.template.other.Opera;
 
-import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.*;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.AUTORE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.BENE_CULTURALE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.CLASSIFICAZIONE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.COMUNE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.DATAZIONE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.DEFINIZIONE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.DENOMINAZIONE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.IMG;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.INDIRIZZO;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.LAT;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.LOCALIZZAZIONE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.LON;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.MATERIA_TECNICA;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.MISURE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.PROVINCIA;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.REGIONE;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.SOGGETTO;
+import static it.unive.dais.cevid.datadroid.template.database.DatabaseStrings.TITOLO;
 
 /**
  * Questa classe è la componente principale del toolkit: fornisce servizi primari per un'app basata su Google Maps, tra cui localizzazione, pulsanti
@@ -124,7 +141,10 @@ public class MapsActivity extends AppCompatActivity
 
     private ClusterManager<Opera> mClusterManager;
 
-    public static ArrayList<Opera> myItemsArray = new ArrayList<>();
+    public static ArrayList<Opera> onClusterClickItemsArray = new ArrayList<>();
+
+    public static SparseArray<Opera> opereArray = new SparseArray<>();
+
     /**
      * Questo metodo viene invocato quando viene inizializzata questa activity.
      * Si tratta di una sorta di "main" dell'intera activity.
@@ -136,7 +156,6 @@ public class MapsActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
         //apri connessione con database
         db = new DbManager(this);
 
@@ -166,7 +185,7 @@ public class MapsActivity extends AppCompatActivity
                     MarkerOptions opts = new MarkerOptions();
                     opts.position(currentPosition);
                     opts.title(getString(R.string.marker_title));
-                    opts.snippet(String.format("lat: %g\nlng: %g", currentPosition.latitude, currentPosition.longitude));
+                    opts.snippet(String.format("lat: %glng: %g", currentPosition.latitude, currentPosition.longitude));
                     hereMarker = gMap.addMarker(opts);
                     if (gMap != null)
                         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, getResources().getInteger(R.integer.zoomFactor_button_here)));
@@ -463,7 +482,11 @@ public class MapsActivity extends AppCompatActivity
         gMap.setOnMarkerClickListener(mClusterManager);
         gMap.setOnInfoWindowClickListener(mClusterManager);
 
-        demo();
+        //Decide se creare la visualizzazione da primo avvio o se ci sono dei filtri da applicare
+        if (getIntent().getBooleanExtra("Filtri", false))
+            filteredAction();
+        else
+            defaultAction();
     }
 
     /**
@@ -606,18 +629,18 @@ public class MapsActivity extends AppCompatActivity
     }
 
 
-    // demo code
+    // defaultAction code
 
     @Nullable
     private Collection<Marker> markers;
 
-    private void demo() {
-        Cursor cr = db.getDatabaseAccess().query("opere", null, null, null, null, null, null, null);
+    private void defaultAction() {
+        Cursor cr = db.getDatabaseAccess().rawQuery("SELECT * FROM opere", null);
 
         cr.moveToFirst();
 
         for (int i = 1; i < cr.getCount(); i++) {
-            Opera offsetItem = new Opera(
+            Opera opera = new Opera(
                     Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))),
                     Double.parseDouble(cr.getString(cr.getColumnIndex(LON))),
                     cr.getString(cr.getColumnIndex(IMG)),
@@ -637,27 +660,47 @@ public class MapsActivity extends AppCompatActivity
                     cr.getString(cr.getColumnIndex(COMUNE)),
                     cr.getString(cr.getColumnIndex(INDIRIZZO)));
 
-            mClusterManager.addItem(offsetItem);
+            opereArray.append(cr.getInt(cr.getColumnIndex("_id")), opera);
 
+            mClusterManager.addItem(opera);
             cr.moveToNext();
         }
+
         cr.close();
     }
 
-    private Double parse(String s) {
-        s = s.replace(".", "a");
-        s = s.replaceFirst("a", ".");
-        s = s.replaceFirst("a", "");
-        return Double.parseDouble(s);
-    }
+    private void filteredAction() {
+        Cursor cr = db.getDatabaseAccess().rawQuery(
+                "select _id from opere, autori where opere.autore = autori.autore and autori.selezionato = 1 " +
+                        "union " +
+                        "select _id from opere, date where opere.datazione = date.data and date.selezionato = 1 " +
+                        "union " +
+                        "select _id from opere, tipologie where opere.bene_culturale = tipologie.tipologia and tipologie.selezionato = 1",
+                null);
 
+        mClusterManager.clearItems();
+        mClusterManager.setAnimation(false);
+        if (cr.getCount() == 0)
+            for (int i = 1; i < 43765; i++)
+                mClusterManager.addItem(opereArray.get(i));
+        else {
+            cr.moveToFirst();
+
+            for (int i = 1; i <= cr.getCount(); i++) {
+                mClusterManager.addItem(opereArray.get(cr.getInt(0)));
+                cr.moveToNext();
+            }
+        }
+        mClusterManager.setAnimation(true);
+        cr.close();
+    }
 
     /* gestione callback cluster*/
 
     @Override
     public boolean onClusterClick(Cluster<Opera> cluster) {
         Intent intent = new Intent(MapsActivity.this, FilterActivity.class);
-        myItemsArray.addAll(cluster.getItems());
+        onClusterClickItemsArray.addAll(cluster.getItems());
         startActivity(intent);
         return false;
     }
@@ -665,7 +708,7 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onClusterItemInfoWindowClick(Opera opera) {
         Intent intent = new Intent(MapsActivity.this, ItemInfoActivity.class);
-        intent.putExtra("item",opera);
+        intent.putExtra("item", opera);
         startActivity(intent);
     }
 }

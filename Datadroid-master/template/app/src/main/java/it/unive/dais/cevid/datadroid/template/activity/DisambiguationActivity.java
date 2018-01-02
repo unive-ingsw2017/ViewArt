@@ -24,8 +24,8 @@ public class DisambiguationActivity extends Activity {
         setContentView(R.layout.activity_disambiguation);
 
         ArrayList<Opera> arrayItem = new ArrayList<>();
-        arrayItem.addAll(MapsActivity.myItemsArray);
-        MapsActivity.myItemsArray.clear();
+        arrayItem.addAll(MapsActivity.onClusterClickItemsArray);
+        MapsActivity.onClusterClickItemsArray.clear();
 
 
         listView = (ListView) findViewById(R.id.custom_list);
