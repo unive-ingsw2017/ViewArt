@@ -196,6 +196,9 @@ public class MapsActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * crea una Lista contenente tutte le opere, serve ad evitare di dovere effettuare più volte delle query alla tabella opere
+     */
     private void creaArray() {
         Cursor cr = db.getDatabaseAccess().rawQuery("SELECT * FROM opere", null);
 
@@ -515,11 +518,27 @@ public class MapsActivity extends AppCompatActivity
         gMap.setOnMarkerClickListener(mClusterManager);
         gMap.setOnInfoWindowClickListener(mClusterManager);
 
+
         //Decide se creare la visualizzazione da primo avvio o se ci sono dei filtri da applicare
-        if (getIntent().getBooleanExtra("Filtri", false))
+        if (filterNumber()>0)
             filteredAction();
         else
             defaultAction();
+    }
+
+    /**
+     *
+     * @return restituisce il numero dei filtri attualmente attivi
+     */
+    private int filterNumber() {
+        Cursor cr = db.getDatabaseAccess().rawQuery(
+                "select count(*) from " +
+                        "(select * from autori where autori.selezionato = 1 " +
+                        "union " +
+                        "select * from date where date.selezionato = 1 " +
+                        "union " +
+                        "select * from tipologie where tipologie.selezionato = 1)", null);
+        return cr.getCount();
     }
 
     /**
