@@ -3,7 +3,6 @@ package it.unive.dais.cevid.datadroid.template.other;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,16 +53,33 @@ public class CustomAdapterChecked extends ArrayAdapter<SimpleEntry<String, Integ
             convertView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     CheckBox cb = (CheckBox) v.findViewById(R.id.my_checkbox);
-                    Map.Entry<String, Integer> entry = (SimpleEntry<String,Integer>) cb.getTag();
-                    String txt = (String) ((TextView) v.findViewById(R.id.check_text)).getText();
+                    Map.Entry<String, Integer> entry = (SimpleEntry<String, Integer>) cb.getTag();
 
                     if (cb.isChecked()) {
                         cb.setChecked(false);
-                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 0 WHERE " + colonna + " = '" + txt + "'", new String[]{});
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 0 WHERE " + colonna + " = '" + entry.getKey() + "'", new String[]{});
                         entry.setValue(0);
                     } else {
                         cb.setChecked(true);
-                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 1 WHERE " + colonna + " = '" + txt + "'", new String[]{});
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 1 WHERE " + colonna + " = '" + entry.getKey() + "'", new String[]{});
+                        entry.setValue(1);
+                    }
+                }
+            });
+
+            holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick (View v){
+                    CheckBox cb = (CheckBox) v;
+                    Map.Entry<String, Integer> entry = (SimpleEntry<String, Integer>) v.getTag();
+
+                    if (!cb.isChecked()) {
+                        cb.setChecked(false);
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 0 WHERE " + colonna + " = '" + entry.getKey() + "'", new String[]{});
+                        entry.setValue(0);
+                    } else {
+                        cb.setChecked(true);
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 1 WHERE " + colonna + " = '" + entry.getKey() + "'", new String[]{});
                         entry.setValue(1);
                     }
                 }
@@ -75,7 +91,6 @@ public class CustomAdapterChecked extends ArrayAdapter<SimpleEntry<String, Integ
 
         SimpleEntry<String, Integer> tuple = info.get(position);
         holder.text.setText(tuple.getKey());
-        Log.e("value","" + tuple.getValue() );
         holder.checkBox.setChecked(tuple.getValue() != 0);
 
         holder.checkBox.setTag(tuple);

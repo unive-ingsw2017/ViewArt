@@ -158,6 +158,7 @@ public class MapsActivity extends AppCompatActivity
         setContentView(R.layout.activity_maps);
         //apri connessione con database
         db = new DbManager(this);
+        creaArray();
 
         // inizializza le preferenze
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -193,6 +194,38 @@ public class MapsActivity extends AppCompatActivity
                     Log.d(TAG, "no current position available");
             }
         });
+    }
+
+    private void creaArray() {
+        Cursor cr = db.getDatabaseAccess().rawQuery("SELECT * FROM opere", null);
+
+        cr.moveToFirst();
+
+        for (int i = 1; i < cr.getCount(); i++) {
+            Opera opera = new Opera(
+                    Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))),
+                    Double.parseDouble(cr.getString(cr.getColumnIndex(LON))),
+                    cr.getString(cr.getColumnIndex(IMG)),
+                    cr.getString(cr.getColumnIndex(BENE_CULTURALE)),
+                    cr.getString(cr.getColumnIndex(TITOLO)),
+                    cr.getString(cr.getColumnIndex(SOGGETTO)),
+                    cr.getString(cr.getColumnIndex(LOCALIZZAZIONE)),
+                    cr.getString(cr.getColumnIndex(DATAZIONE)),
+                    cr.getString(cr.getColumnIndex(AUTORE)),
+                    cr.getString(cr.getColumnIndex(MATERIA_TECNICA)),
+                    cr.getString(cr.getColumnIndex(MISURE)),
+                    cr.getString(cr.getColumnIndex(DEFINIZIONE)),
+                    cr.getString(cr.getColumnIndex(DENOMINAZIONE)),
+                    cr.getString(cr.getColumnIndex(CLASSIFICAZIONE)),
+                    cr.getString(cr.getColumnIndex(REGIONE)),
+                    cr.getString(cr.getColumnIndex(PROVINCIA)),
+                    cr.getString(cr.getColumnIndex(COMUNE)),
+                    cr.getString(cr.getColumnIndex(INDIRIZZO)));
+
+            opereArray.append(cr.getInt(cr.getColumnIndex("_id")), opera);
+            cr.moveToNext();
+        }
+        cr.close();
     }
 
     // ciclo di vita della app
@@ -303,7 +336,7 @@ public class MapsActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.MENU_SETTINGS:
-                startActivity(new Intent(this, SettingsActivity.class));
+                startActivity(new Intent(this, FilterActivity.class));
                 break;
             case R.id.MENU_INFO:
                 startActivity(new Intent(this, InfoActivity.class));
@@ -635,38 +668,10 @@ public class MapsActivity extends AppCompatActivity
     private Collection<Marker> markers;
 
     private void defaultAction() {
-        Cursor cr = db.getDatabaseAccess().rawQuery("SELECT * FROM opere", null);
-
-        cr.moveToFirst();
-
-        for (int i = 1; i < cr.getCount(); i++) {
-            Opera opera = new Opera(
-                    Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))),
-                    Double.parseDouble(cr.getString(cr.getColumnIndex(LON))),
-                    cr.getString(cr.getColumnIndex(IMG)),
-                    cr.getString(cr.getColumnIndex(BENE_CULTURALE)),
-                    cr.getString(cr.getColumnIndex(TITOLO)),
-                    cr.getString(cr.getColumnIndex(SOGGETTO)),
-                    cr.getString(cr.getColumnIndex(LOCALIZZAZIONE)),
-                    cr.getString(cr.getColumnIndex(DATAZIONE)),
-                    cr.getString(cr.getColumnIndex(AUTORE)),
-                    cr.getString(cr.getColumnIndex(MATERIA_TECNICA)),
-                    cr.getString(cr.getColumnIndex(MISURE)),
-                    cr.getString(cr.getColumnIndex(DEFINIZIONE)),
-                    cr.getString(cr.getColumnIndex(DENOMINAZIONE)),
-                    cr.getString(cr.getColumnIndex(CLASSIFICAZIONE)),
-                    cr.getString(cr.getColumnIndex(REGIONE)),
-                    cr.getString(cr.getColumnIndex(PROVINCIA)),
-                    cr.getString(cr.getColumnIndex(COMUNE)),
-                    cr.getString(cr.getColumnIndex(INDIRIZZO)));
-
-            opereArray.append(cr.getInt(cr.getColumnIndex("_id")), opera);
-
-            mClusterManager.addItem(opera);
-            cr.moveToNext();
-        }
-
-        cr.close();
+        mClusterManager.setAnimation(false);
+        for (int i = 1; i <= opereArray.size(); i++)
+            mClusterManager.addItem(opereArray.get(i));
+        mClusterManager.setAnimation(true);
     }
 
     private void filteredAction() {
@@ -675,13 +680,12 @@ public class MapsActivity extends AppCompatActivity
                         "union " +
                         "select _id from opere, date where opere.datazione = date.data and date.selezionato = 1 " +
                         "union " +
-                        "select _id from opere, tipologie where opere.bene_culturale = tipologie.tipologia and tipologie.selezionato = 1",
-                null);
+                        "select _id from opere, tipologie where opere.bene_culturale = tipologie.tipologia and tipologie.selezionato = 1", null);
 
         mClusterManager.clearItems();
         mClusterManager.setAnimation(false);
         if (cr.getCount() == 0)
-            for (int i = 1; i < 43765; i++)
+            for (int i = 1; i <= opereArray.size(); i++)
                 mClusterManager.addItem(opereArray.get(i));
         else {
             cr.moveToFirst();

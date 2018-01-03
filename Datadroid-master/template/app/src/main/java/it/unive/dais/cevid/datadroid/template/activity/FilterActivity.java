@@ -45,7 +45,7 @@ public class FilterActivity extends AppCompatActivity implements AdapterView.OnI
         date.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter,retriveInformation(DATE, DATA), DATE, DATA));
 
         tipologie = (ListView) findViewById(R.id.tipologie);
-        tipologie.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter,retriveInformation(TIPOLOGIE, TIPOLOGIA), TIPOLOGIE, TIPOLOGIE));
+        tipologie.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter,retriveInformation(TIPOLOGIE, TIPOLOGIA), TIPOLOGIE, TIPOLOGIA));
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
