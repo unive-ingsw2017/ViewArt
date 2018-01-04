@@ -57,11 +57,11 @@ public class CustomAdapterChecked extends ArrayAdapter<SimpleEntry<String, Integ
 
                     if (cb.isChecked()) {
                         cb.setChecked(false);
-                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 0 WHERE " + colonna + " = '" + entry.getKey() + "'", new String[]{});
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 0 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'","''") + "'", new String[]{});
                         entry.setValue(0);
                     } else {
                         cb.setChecked(true);
-                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 1 WHERE " + colonna + " = '" + entry.getKey() + "'", new String[]{});
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 1 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'","''") + "'", new String[]{});
                         entry.setValue(1);
                     }
                 }
@@ -75,11 +75,11 @@ public class CustomAdapterChecked extends ArrayAdapter<SimpleEntry<String, Integ
 
                     if (!cb.isChecked()) {
                         cb.setChecked(false);
-                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 0 WHERE " + colonna + " = '" + entry.getKey() + "'", new String[]{});
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 0 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'","''") + "'", new String[]{});
                         entry.setValue(0);
                     } else {
                         cb.setChecked(true);
-                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 1 WHERE " + colonna + " = '" + entry.getKey() + "'", new String[]{});
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 1 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'","''") + "'", new String[]{});
                         entry.setValue(1);
                     }
                 }

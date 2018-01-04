@@ -158,7 +158,8 @@ public class MapsActivity extends AppCompatActivity
         setContentView(R.layout.activity_maps);
         //apri connessione con database
         db = new DbManager(this);
-        creaArray();
+        if (opereArray.size() == 0)
+            creaArray();
 
         // inizializza le preferenze
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -520,14 +521,13 @@ public class MapsActivity extends AppCompatActivity
 
 
         //Decide se creare la visualizzazione da primo avvio o se ci sono dei filtri da applicare
-        if (filterNumber()>0)
+        if (getIntent().getBooleanExtra("Filtri", false) && filterNumber() > 0)
             filteredAction();
         else
             defaultAction();
     }
 
     /**
-     *
      * @return restituisce il numero dei filtri attualmente attivi
      */
     private int filterNumber() {
@@ -722,7 +722,7 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     public boolean onClusterClick(Cluster<Opera> cluster) {
-        Intent intent = new Intent(MapsActivity.this, FilterActivity.class);
+        Intent intent = new Intent(MapsActivity.this, DisambiguationActivity.class);
         onClusterClickItemsArray.addAll(cluster.getItems());
         startActivity(intent);
         return false;
@@ -733,5 +733,21 @@ public class MapsActivity extends AppCompatActivity
         Intent intent = new Intent(MapsActivity.this, ItemInfoActivity.class);
         intent.putExtra("item", opera);
         startActivity(intent);
+    }
+
+    private static long back_pressed;
+
+    @Override
+    public void onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
+        } else {
+            Toast.makeText(getBaseContext(), "Premere nuovamente per uscire", Toast.LENGTH_SHORT).show();
+            back_pressed = System.currentTimeMillis();
+        }
+
     }
 }
