@@ -204,9 +204,7 @@ public class MapsActivity extends AppCompatActivity
     private void creaArray() {
         Cursor cr = db.getDatabaseAccess().rawQuery("SELECT * FROM opere", null);
 
-        cr.moveToFirst();
-
-        for (int i = 1; i < cr.getCount(); i++) {
+        while (cr.moveToNext()){
             Opera opera = new Opera(
                     Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))),
                     Double.parseDouble(cr.getString(cr.getColumnIndex(LON))),
@@ -228,7 +226,6 @@ public class MapsActivity extends AppCompatActivity
                     cr.getString(cr.getColumnIndex(INDIRIZZO)));
 
             opereArray.append(cr.getInt(cr.getColumnIndex("_id")), opera);
-            cr.moveToNext();
         }
         cr.close();
     }
@@ -671,7 +668,7 @@ public class MapsActivity extends AppCompatActivity
 
     private void filteredAction() {
         Cursor cr = db.getDatabaseAccess().rawQuery(
-                "select _id from opere, autori where opere.autore = autori.autore and autori.selezionato = 1 " +
+                    "select _id from opere, autori where opere.autore = autori.autore and autori.selezionato = 1 " +
                         "union " +
                         "select _id from opere, date where opere.datazione = date.data and date.selezionato = 1 " +
                         "union " +
@@ -682,14 +679,10 @@ public class MapsActivity extends AppCompatActivity
         if (cr.getCount() == 0)
             for (int i = 1; i <= opereArray.size(); i++)
                 mClusterManager.addItem(opereArray.get(i));
-        else {
-            cr.moveToFirst();
-
-            for (int i = 1; i <= cr.getCount(); i++) {
+        else
+            while(cr.moveToNext())
                 mClusterManager.addItem(opereArray.get(cr.getInt(0)));
-                cr.moveToNext();
-            }
-        }
+
         mClusterManager.setAnimation(true);
         cr.close();
     }

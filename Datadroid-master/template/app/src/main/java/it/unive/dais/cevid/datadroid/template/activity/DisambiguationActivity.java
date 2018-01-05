@@ -50,9 +50,9 @@ public class DisambiguationActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        listView.clearFocus();
         CustomAdapter c = (CustomAdapter) listView.getAdapter();
         c.terminateAsyncTasks();
+        listView.setAdapter(null);
     }
 }
 
