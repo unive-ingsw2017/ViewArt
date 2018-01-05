@@ -157,10 +157,11 @@ public class MapsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         //apri connessione con database
-        db = new DbManager(this);
-        if (opereArray.size() == 0)
-            creaArray();
 
+        if (opereArray.size() == 0) {
+            db = new DbManager(this);
+            creaArray();
+        }
         // inizializza le preferenze
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -531,6 +532,7 @@ public class MapsActivity extends AppCompatActivity
      * @return restituisce il numero dei filtri attualmente attivi
      */
     private int filterNumber() {
+        int cont;
         Cursor cr = db.getDatabaseAccess().rawQuery(
                 "select count(*) from " +
                         "(select * from autori where autori.selezionato = 1 " +
@@ -538,7 +540,9 @@ public class MapsActivity extends AppCompatActivity
                         "select * from date where date.selezionato = 1 " +
                         "union " +
                         "select * from tipologie where tipologie.selezionato = 1)", null);
-        return cr.getCount();
+        cont = cr.getCount();
+        cr.close();
+        return cont;
     }
 
     /**
@@ -683,14 +687,13 @@ public class MapsActivity extends AppCompatActivity
 
     // defaultAction code
 
-    @Nullable
-    private Collection<Marker> markers;
-
     private void defaultAction() {
-        mClusterManager.setAnimation(false);
+
+        mClusterManager.clearItems();
+
         for (int i = 1; i <= opereArray.size(); i++)
             mClusterManager.addItem(opereArray.get(i));
-        mClusterManager.setAnimation(true);
+
     }
 
     private void filteredAction() {
