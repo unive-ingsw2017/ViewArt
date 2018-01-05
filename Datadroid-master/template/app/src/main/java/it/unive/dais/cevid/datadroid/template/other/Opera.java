@@ -7,7 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 
-public class Opera implements ClusterItem,Parcelable {
+public class Opera implements ClusterItem, Parcelable {
     private LatLng position;
     private String img;
     private String bene_culturale;
@@ -86,18 +86,12 @@ public class Opera implements ClusterItem,Parcelable {
 
     @Override
     public String getTitle() {
-        if (titolo == null || titolo.equals(""))
-            return "No title";
-        else
-            return titolo;
+        return "Titolo: "+format(titolo);
     }
 
     @Override
     public String getSnippet() {
-        if (autore == null || autore.equals(""))
-            return "Autore sconosciuto";
-        else
-            return autore;
+        return "Autore: " + format(autore);
     }
 
     public String getImgUrl() {
@@ -105,69 +99,70 @@ public class Opera implements ClusterItem,Parcelable {
     }
 
     public String getBene_culturale() {
-        if (bene_culturale == null || bene_culturale.equals(""))
-            return "Tipologia sconosciuta";
-        else
-            return bene_culturale;
+        return format(bene_culturale);
     }
 
     public String getTitolo() {
-        if (titolo == null || titolo.equals(""))
-            return "No titolo";
-        else
-            return titolo;
+        return format(titolo);
     }
 
     public String getSoggetto() {
-        return soggetto;
+        return format(soggetto);
     }
 
     public String getLocalizzazione() {
-        return localizzazione;
+        return format(localizzazione);
     }
 
     public String getDatazione() {
-        return datazione;
+        return format(datazione);
     }
 
     public String getAutore() {
-        return autore;
+        return format(autore);
     }
 
     public String getMateria_tecnica() {
-        return materia_tecnica;
+        return format(materia_tecnica);
     }
 
     public String getMisure() {
-        return misure;
+        return format(misure);
     }
 
     public String getDefinizione() {
-        return definizione;
+        return format(definizione);
     }
 
     public String getDenominazione() {
-        return denominazione;
+        return format(denominazione);
     }
 
     public String getClassificazione() {
-        return classificazione;
+        return format(classificazione);
     }
 
     public String getRegione() {
-        return regione;
+        return format(regione);
     }
 
     public String getProvincia() {
-        return provincia;
+        return format(provincia);
     }
 
     public String getComune() {
-        return comune;
+        return format(comune);
     }
 
     public String getIndirizzo() {
-        return indirizzo;
+        return format(indirizzo);
+    }
+
+    private String format(String s) {
+        if (s == null || s.equals(""))
+            return "Non presente";
+        else
+            return s;
     }
 
     @Override

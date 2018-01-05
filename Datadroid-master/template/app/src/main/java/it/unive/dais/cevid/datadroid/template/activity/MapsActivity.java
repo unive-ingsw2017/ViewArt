@@ -250,7 +250,7 @@ public class MapsActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        applyMapSettings();
+        //applyMapSettings();
     }
 
     @Override
@@ -451,23 +451,7 @@ public class MapsActivity extends AppCompatActivity
      */
     @Override
     public void onCameraMoveStarted(int reason) {
-        setHereButtonVisibility();
-    }
-
-    /**
-     * Metodo proprietario che imposta la visibilità del pulsante HERE.
-     * Si occupa di nascondere o mostrare il pulsante HERE in base allo zoom attuale, confrontandolo con la soglia di zoom
-     * impostanta nelle preferenze.
-     * Questo comportamento è dimostrativo e non è necessario tenerlo quando si sviluppa un'applicazione modificando questo template.
-     */
-    public void setHereButtonVisibility() {
-        if (gMap != null) {
-            if (gMap.getCameraPosition().zoom < SettingsActivity.getZoomThreshold(this)) {
-                button_here.setVisibility(View.INVISIBLE);
-            } else {
-                button_here.setVisibility(View.VISIBLE);
-            }
-        }
+        button_here.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -509,7 +493,7 @@ public class MapsActivity extends AppCompatActivity
         uis.setZoomControlsEnabled(true);
         uis.setMapToolbarEnabled(true);
 
-        applyMapSettings();
+        //applyMapSettings();
         mClusterManager = new ClusterManager<Opera>(this, gMap);
         //mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterClickListener(this);
@@ -519,7 +503,7 @@ public class MapsActivity extends AppCompatActivity
         gMap.setOnCameraIdleListener(mClusterManager);
         gMap.setOnMarkerClickListener(mClusterManager);
         gMap.setOnInfoWindowClickListener(mClusterManager);
-
+        gMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         //Decide se creare la visualizzazione da primo avvio o se ci sono dei filtri da applicare
         if (getIntent().getBooleanExtra("Filtri", false) && filterNumber() > 0)
@@ -545,17 +529,6 @@ public class MapsActivity extends AppCompatActivity
         return cont;
     }
 
-    /**
-     * Metodo proprietario che forza l'applicazione le impostazioni (o preferenze) che riguardano la mappa.
-     */
-    protected void applyMapSettings() {
-        if (gMap != null) {
-            Log.d(TAG, "applying map settings");
-            gMap.setMapType(SettingsActivity.getMapStyle(this));
-            gMap.getUiSettings().setMyLocationButtonEnabled(false);
-        }
-        setHereButtonVisibility();
-    }
 
     /**
      * Naviga dalla posizione from alla posizione to chiamando il navigatore di Google.

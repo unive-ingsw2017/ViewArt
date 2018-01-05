@@ -42,6 +42,7 @@ public class ItemInfoActivity extends Activity {
         buffer.add("Denominazione :" + item.getDenominazione());
         buffer.add("Classificazione :" + item.getClassificazione());
         buffer.add("Definizione :" + item.getDefinizione());
+        buffer.add("Materia tecnica :" + item.getMateria_tecnica());
         buffer.add("Misure :" + item.getMisure());
         buffer.add("Localizzazione :" + item.getLocalizzazione());
 

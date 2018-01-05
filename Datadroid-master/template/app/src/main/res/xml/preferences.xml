@@ -4,7 +4,7 @@
         android:title="@string/menu_mapStyle_title"
         android:summary="@string/menu_mapStyle_summary"
         android:key="pref_mapStyle"
-        android:defaultValue="1"
+        android:defaultValue="0"
         android:entries="@array/mapStyleArray"
         android:entryValues="@array/mapStyleValues" />
     <ListPreference
