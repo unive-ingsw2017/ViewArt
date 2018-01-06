@@ -51,7 +51,7 @@ public class ItemInfoActivity extends AppCompatActivity {
         }
 
         ImageView immagine = (ImageView) findViewById(R.id.image);
-        new ImageDownloaderTask(immagine).execute("https://cc-media-foxit.fichub.com/image/floptv/276a97a2-3f7e-4ae9-8ff9-3b0d1546ffc9/immagini-avatar-whatsapp-17-maxw-600.jpg", "" + 2);
+        new ImageDownloaderTask(immagine).execute(opera.getImgUrl(), "" + 2);  //compressione 2x
 
         ListView information = (ListView) findViewById(R.id.listViewInfo);
 

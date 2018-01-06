@@ -62,9 +62,7 @@ public class CustomAdapter extends BaseAdapter {
 
         if (holder.imageView != null) {
             Log.e("downloading", arrayItem.get(position).getImgUrl());
-            tasks.add(new ImageDownloaderTask(holder.imageView)
-                    .execute("https://cc-media-foxit.fichub.com/image/floptv/276a97a2-3f7e-4ae9-8ff9-3b0d1546ffc9/immagini-avatar-whatsapp-17-maxw-600.jpg",
-                            "" + 8));
+            tasks.add(new ImageDownloaderTask(holder.imageView).execute(arrayItem.get(position).getImgUrl(), "" + 8)); //compressione 8x
         }
 
         return convertView;

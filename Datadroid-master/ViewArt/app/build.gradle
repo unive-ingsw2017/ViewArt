@@ -1,6 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'ViewArt'
+            keyPassword 'ViewArt'
+        }
+    }
     compileSdkVersion 25
     defaultConfig {
         applicationId 'it.unive.ViewArt'
@@ -15,7 +21,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
