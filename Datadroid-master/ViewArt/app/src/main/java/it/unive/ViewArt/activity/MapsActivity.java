@@ -161,28 +161,10 @@ public class MapsActivity extends AppCompatActivity
      * crea una Lista contenente tutte le opere, serve ad evitare di dovere effettuare più volte delle query alla tabella opere
      */
     private void creaArray() {
-        /*Cursor cr = db.getDatabaseAccess().rawQuery(
-                "SELECT _id, lat, lon, img, bene_culturale, titolo, soggetto, localizzazione, datazione, autore, materia_tecnica, misure, definizione, denominazione, classificazione " +
-                        "FROM opere", null);*/
         Cursor cr = db.getDatabaseAccess().rawQuery("SELECT _id, lat, lon, titolo, autore FROM opere", null);
 
         while (cr.moveToNext()) {
-            /*Opera opera = new Opera(
-                    Double.parseDouble(cr.getString(1)),
-                    Double.parseDouble(cr.getString(2)),
-                    cr.getString(3),
-                    cr.getString(4),
-                    cr.getString(5),
-                    cr.getString(6),
-                    cr.getString(7),
-                    cr.getString(8),
-                    cr.getString(9),
-                    cr.getString(10),
-                    cr.getString(11),
-                    cr.getString(12),
-                    cr.getString(13),
-                    cr.getString(14));*/
-            Opera opera = new Opera (
+            Opera opera = new Opera(
                     cr.getInt(0),
                     Double.parseDouble(cr.getString(1)),
                     Double.parseDouble(cr.getString(2)),
@@ -457,12 +439,11 @@ public class MapsActivity extends AppCompatActivity
     private int filterNumber() {
         int cont;
         Cursor cr = db.getDatabaseAccess().rawQuery(
-                "select count(*) from " +
-                        "(select * from autori where autori.selezionato = 1 " +
+                "select * from autori where autori.selezionato = 1 " +
                         "union " +
                         "select * from date where date.selezionato = 1 " +
                         "union " +
-                        "select * from tipologie where tipologie.selezionato = 1)", null);
+                        "select * from tipologie where tipologie.selezionato = 1", null);
         cont = cr.getCount();
         cr.close();
         return cont;
@@ -602,7 +583,7 @@ public class MapsActivity extends AppCompatActivity
     @Override
     public void onClusterItemInfoWindowClick(Opera opera) {
         Intent intent = new Intent(MapsActivity.this, ItemInfoActivity.class);
-        intent.putExtra("item", opera);
+        intent.putExtra("operaId", opera.getId());
         startActivity(intent);
     }
 

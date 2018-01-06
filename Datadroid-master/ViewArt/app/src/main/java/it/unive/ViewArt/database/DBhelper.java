@@ -12,20 +12,36 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static it.unive.ViewArt.database.DatabaseStrings.*;
+import static it.unive.ViewArt.database.DatabaseStrings.AUTORE;
+import static it.unive.ViewArt.database.DatabaseStrings.BENE_CULTURALE;
+import static it.unive.ViewArt.database.DatabaseStrings.CLASSIFICAZIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.COMUNE;
+import static it.unive.ViewArt.database.DatabaseStrings.DATAZIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.DEFINIZIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.DENOMINAZIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.ID;
+import static it.unive.ViewArt.database.DatabaseStrings.IMG;
+import static it.unive.ViewArt.database.DatabaseStrings.INDIRIZZO;
+import static it.unive.ViewArt.database.DatabaseStrings.LAT;
+import static it.unive.ViewArt.database.DatabaseStrings.LOCALIZZAZIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.LON;
+import static it.unive.ViewArt.database.DatabaseStrings.MATERIA_TECNICA;
+import static it.unive.ViewArt.database.DatabaseStrings.MISURE;
+import static it.unive.ViewArt.database.DatabaseStrings.PROVINCIA;
+import static it.unive.ViewArt.database.DatabaseStrings.REGIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.SOGGETTO;
+import static it.unive.ViewArt.database.DatabaseStrings.TITOLO;
 
 
 public class DBhelper extends SQLiteOpenHelper {
     public static final String DBNAME = "ViewArt";
-
-    private static String DB_PATH = "/data/data/it.unive.ViewArt/databases/";
     // Data Base Name.
     private static final String DATABASE_NAME = "ViewArt";
     // Data Base Version.
     private static final int DATABASE_VERSION = 1;
-
-    private Context context;
+    private static String DB_PATH = "/data/data/it.unive.ViewArt/databases/";
     private static SQLiteDatabase sqliteDB;
+    private Context context;
 
     /**
      * Constructor

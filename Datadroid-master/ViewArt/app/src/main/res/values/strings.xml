@@ -1,7 +1,6 @@
 <resources>
     <!-- Customize your app's name here. -->
-    <string name="app_name">ViewArt</string>
-    <string name="title_activity_maps">View Art - Map</string>
+    <string name="app_name"> ViewArt </string>
     <!-- -->
 
     <string name="gps_disabled">GPS disattivato</string>

@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import it.unive.ViewArt.activity.MapsActivity;
 import it.unive.ViewArt.R;
+import it.unive.ViewArt.activity.MapsActivity;
 
 public class CustomAdapterChecked extends ArrayAdapter<SimpleEntry<String, Integer>> {
 
@@ -57,11 +57,11 @@ public class CustomAdapterChecked extends ArrayAdapter<SimpleEntry<String, Integ
 
                     if (cb.isChecked()) {
                         cb.setChecked(false);
-                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 0 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'","''") + "'", new String[]{});
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 0 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'", "''") + "'", new String[]{});
                         entry.setValue(0);
                     } else {
                         cb.setChecked(true);
-                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 1 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'","''") + "'", new String[]{});
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 1 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'", "''") + "'", new String[]{});
                         entry.setValue(1);
                     }
                 }
@@ -69,17 +69,17 @@ public class CustomAdapterChecked extends ArrayAdapter<SimpleEntry<String, Integ
 
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick (View v){
+                public void onClick(View v) {
                     CheckBox cb = (CheckBox) v;
                     Map.Entry<String, Integer> entry = (SimpleEntry<String, Integer>) v.getTag();
 
                     if (!cb.isChecked()) {
                         cb.setChecked(false);
-                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 0 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'","''") + "'", new String[]{});
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 0 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'", "''") + "'", new String[]{});
                         entry.setValue(0);
                     } else {
                         cb.setChecked(true);
-                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 1 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'","''") + "'", new String[]{});
+                        MapsActivity.db.getDatabaseAccess().execSQL("UPDATE " + tabella + " SET selezionato = 1 WHERE " + colonna + " = '" + entry.getKey().replaceAll("'", "''") + "'", new String[]{});
                         entry.setValue(1);
                     }
                 }

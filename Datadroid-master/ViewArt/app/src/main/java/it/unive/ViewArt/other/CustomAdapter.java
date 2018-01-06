@@ -70,7 +70,7 @@ public class CustomAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void terminateAsyncTasks(){
+    public void terminateAsyncTasks() {
         for (AsyncTask task : tasks)
             task.cancel(true);
     }

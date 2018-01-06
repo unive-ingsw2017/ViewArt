@@ -20,6 +20,7 @@ public class InfoActivity extends AppCompatActivity {
 
     /**
      * Produce la stringa completa coi crediti.
+     *
      * @param ctx oggetto Context, tipicamente {@code this} se chiamato da un'altra Activity.
      * @return ritorna la stringa completa.
      */
@@ -49,6 +50,7 @@ public class InfoActivity extends AppCompatActivity {
 
     /**
      * Metodo di creazione dell'activity che imposta il layout e la text view con la stringa con i crediti.
+     *
      * @param saveInstanceState
      */
     @Override

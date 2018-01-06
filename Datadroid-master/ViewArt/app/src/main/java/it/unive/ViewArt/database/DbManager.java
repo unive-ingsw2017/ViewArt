@@ -8,7 +8,25 @@ import android.database.sqlite.SQLiteException;
 
 import java.io.IOException;
 
-import static it.unive.ViewArt.database.DatabaseStrings.*;
+import static it.unive.ViewArt.database.DatabaseStrings.AUTORE;
+import static it.unive.ViewArt.database.DatabaseStrings.BENE_CULTURALE;
+import static it.unive.ViewArt.database.DatabaseStrings.CLASSIFICAZIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.COMUNE;
+import static it.unive.ViewArt.database.DatabaseStrings.DATAZIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.DEFINIZIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.DENOMINAZIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.ID;
+import static it.unive.ViewArt.database.DatabaseStrings.IMG;
+import static it.unive.ViewArt.database.DatabaseStrings.INDIRIZZO;
+import static it.unive.ViewArt.database.DatabaseStrings.LAT;
+import static it.unive.ViewArt.database.DatabaseStrings.LOCALIZZAZIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.LON;
+import static it.unive.ViewArt.database.DatabaseStrings.MATERIA_TECNICA;
+import static it.unive.ViewArt.database.DatabaseStrings.MISURE;
+import static it.unive.ViewArt.database.DatabaseStrings.PROVINCIA;
+import static it.unive.ViewArt.database.DatabaseStrings.REGIONE;
+import static it.unive.ViewArt.database.DatabaseStrings.SOGGETTO;
+import static it.unive.ViewArt.database.DatabaseStrings.TITOLO;
 
 
 public class DbManager {

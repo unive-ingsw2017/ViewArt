@@ -8,7 +8,6 @@ public class DatabaseStrings {
     public static final String DATE = "date";
 
 
-
     //stringhe per attributi di opere
     public static final String ID = "_id";
     public static final String IMG = "img";

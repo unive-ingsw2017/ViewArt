@@ -52,7 +52,7 @@ public class DisambiguationActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
                 Opera item = (Opera) listView.getItemAtPosition(position);
                 Intent intent = new Intent(DisambiguationActivity.this, ItemInfoActivity.class);
-                intent.putExtra("item", item);
+                intent.putExtra("operaId", item.getId());
                 startActivity(intent);
             }
         });
