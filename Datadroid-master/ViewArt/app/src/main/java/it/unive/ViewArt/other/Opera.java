@@ -8,6 +8,7 @@ import com.google.maps.android.clustering.ClusterItem;
 
 
 public class Opera implements ClusterItem, Parcelable {
+    private int id;
     private LatLng position;
     private String img;
     private String bene_culturale;
@@ -21,12 +22,8 @@ public class Opera implements ClusterItem, Parcelable {
     private String definizione;
     private String denominazione;
     private String classificazione;
-    private String regione;
-    private String provincia;
-    private String comune;
-    private String indirizzo;
 
-    public Opera(double lat, double len, String img, String bene_culturale, String titolo, String soggetto, String localizzazione, String datazione, String autore, String materia_tecnica, String misure, String definizione, String denominazione, String classificazione, String regione, String provincia, String comune, String indirizzo) {
+    public Opera(double lat, double len, String img, String bene_culturale, String titolo, String soggetto, String localizzazione, String datazione, String autore, String materia_tecnica, String misure, String definizione, String denominazione, String classificazione) {
         position = new LatLng(lat, len);
         this.img = img;
         this.bene_culturale = bene_culturale;
@@ -40,10 +37,13 @@ public class Opera implements ClusterItem, Parcelable {
         this.definizione = definizione;
         this.denominazione = denominazione;
         this.classificazione = classificazione;
-        this.regione = regione;
-        this.provincia = provincia;
-        this.comune = comune;
-        this.indirizzo = indirizzo;
+    }
+
+    public Opera(int id, double lat, double len, String autore, String titolo) {
+        this.id = id;
+        position = new LatLng(lat, len);
+        this.titolo = titolo;
+        this.autore = autore;
     }
 
 
@@ -61,10 +61,6 @@ public class Opera implements ClusterItem, Parcelable {
         definizione = in.readString();
         denominazione = in.readString();
         classificazione = in.readString();
-        regione = in.readString();
-        provincia = in.readString();
-        comune = in.readString();
-        indirizzo = in.readString();
     }
 
     public static final Creator<Opera> CREATOR = new Creator<Opera>() {
@@ -86,7 +82,7 @@ public class Opera implements ClusterItem, Parcelable {
 
     @Override
     public String getTitle() {
-        return "Titolo: "+format(titolo);
+        return "Titolo: " + format(titolo);
     }
 
     @Override
@@ -142,27 +138,61 @@ public class Opera implements ClusterItem, Parcelable {
         return format(classificazione);
     }
 
-    public String getRegione() {
-        return format(regione);
-    }
-
-    public String getProvincia() {
-        return format(provincia);
-    }
-
-    public String getComune() {
-        return format(comune);
-    }
-
-    public String getIndirizzo() {
-        return format(indirizzo);
-    }
+    public int getId() { return id; }
 
     private String format(String s) {
         if (s == null || s.equals(""))
             return "Non presente";
         else
             return s;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public void setBene_culturale(String bene_culturale) {
+        this.bene_culturale = bene_culturale;
+    }
+
+    public void setTitolo(String titolo) {
+        this.titolo = titolo;
+    }
+
+    public void setSoggetto(String soggetto) {
+        this.soggetto = soggetto;
+    }
+
+    public void setLocalizzazione(String localizzazione) {
+        this.localizzazione = localizzazione;
+    }
+
+    public void setDatazione(String datazione) {
+        this.datazione = datazione;
+    }
+
+    public void setAutore(String autore) {
+        this.autore = autore;
+    }
+
+    public void setMateria_tecnica(String materia_tecnica) {
+        this.materia_tecnica = materia_tecnica;
+    }
+
+    public void setMisure(String misure) {
+        this.misure = misure;
+    }
+
+    public void setDefinizione(String definizione) {
+        this.definizione = definizione;
+    }
+
+    public void setDenominazione(String denominazione) {
+        this.denominazione = denominazione;
+    }
+
+    public void setClassificazione(String classificazione) {
+        this.classificazione = classificazione;
     }
 
     @Override
@@ -185,9 +215,5 @@ public class Opera implements ClusterItem, Parcelable {
         dest.writeString(definizione);
         dest.writeString(denominazione);
         dest.writeString(classificazione);
-        dest.writeString(regione);
-        dest.writeString(provincia);
-        dest.writeString(comune);
-        dest.writeString(indirizzo);
     }
 }

@@ -7,13 +7,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.AbstractMap;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 
 import it.unive.ViewArt.R;
@@ -26,57 +24,11 @@ import static it.unive.ViewArt.database.DatabaseStrings.DATE;
 import static it.unive.ViewArt.database.DatabaseStrings.TIPOLOGIA;
 import static it.unive.ViewArt.database.DatabaseStrings.TIPOLOGIE;
 
-public class FilterActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class FilterActivity extends AppCompatActivity {
 
     private ListView autori;
     private ListView date;
     private ListView tipologie;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_filter);
-
-        autori = (ListView) findViewById(R.id.autori);
-        autori.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(AUTORI, AUTORE), AUTORI, AUTORE));
-        autori.setItemsCanFocus(false);
-
-        date = (ListView) findViewById(R.id.date);
-        date.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter,retriveInformation(DATE, DATA), DATE, DATA));
-
-        tipologie = (ListView) findViewById(R.id.tipologie);
-        tipologie.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter,retriveInformation(TIPOLOGIE, TIPOLOGIA), TIPOLOGIE, TIPOLOGIA));
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        Menu menu = navigation.getMenu();
-
-        menu.findItem(R.id.navigation_autore).setIcon(R.drawable.autore);
-        menu.findItem(R.id.navigation_autore).setTitle("Autore");
-
-        menu.findItem(R.id.navigation_tipologia).setTitle("Tipologia");
-
-        menu.findItem(R.id.navigation_data).setIcon(R.drawable.data);
-        menu.findItem(R.id.navigation_data).setTitle("Data");
-
-        autori.setOnItemClickListener(this);
-
-    }
-
-    ArrayList<AbstractMap.SimpleEntry<String, Integer>> retriveInformation(String tabella, String colonna) {
-        Cursor cr = MapsActivity.db.getDatabaseAccess().rawQuery("SELECT * FROM " + tabella + " order by selezionato desc", null);
-
-        cr.moveToFirst();
-        ArrayList<AbstractMap.SimpleEntry<String, Integer>> buffer = new ArrayList<>();
-        for (int i = 1; i <= cr.getCount(); i++) {
-            buffer.add(new AbstractMap.SimpleEntry<>(cr.getString(cr.getColumnIndex(colonna)), cr.getInt(cr.getColumnIndex("selezionato"))));
-            cr.moveToNext();
-        }
-        cr.close();
-        return buffer;
-    }
-
 
     private OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new OnNavigationItemSelectedListener() {
 
@@ -104,12 +56,46 @@ public class FilterActivity extends AppCompatActivity implements AdapterView.OnI
     };
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_filter);
+
+        autori = (ListView) findViewById(R.id.autori);
+        autori.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(AUTORI, AUTORE), AUTORI, AUTORE));
+        autori.setItemsCanFocus(false);
+
+        date = (ListView) findViewById(R.id.date);
+        date.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(DATE, DATA), DATE, DATA));
+
+        tipologie = (ListView) findViewById(R.id.tipologie);
+        tipologie.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(TIPOLOGIE, TIPOLOGIA), TIPOLOGIE, TIPOLOGIA));
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    @Override
     public void onBackPressed() {
+        super.onBackPressed();
         Intent intent = new Intent(FilterActivity.this, MapsActivity.class);
         intent.putExtra("Filtri", true);
         startActivity(intent);
     }
 
+    ArrayList<SimpleEntry<String, Integer>> retriveInformation(String tabella, String colonna) {
+        ArrayList<SimpleEntry<String, Integer>> buffer = new ArrayList<>();
+        Cursor cr = MapsActivity.db.getDatabaseAccess().rawQuery("SELECT * FROM " + tabella + " order by selezionato desc", null);
+
+        while (cr.moveToNext())
+            buffer.add(new SimpleEntry<>(cr.getString(cr.getColumnIndex(colonna)), cr.getInt(cr.getColumnIndex("selezionato"))));
+
+        cr.close();
+        return buffer;
+    }
+
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {}
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return true;
+    }
 }

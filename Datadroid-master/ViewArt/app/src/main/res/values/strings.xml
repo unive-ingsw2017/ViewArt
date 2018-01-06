@@ -44,5 +44,6 @@
     <string name="autore">Autore</string>
     <string name="tipologia">Tipologia</string>
     <string name="data">Data</string>
+    <string name="filtri">Filtri</string>
 
 </resources>

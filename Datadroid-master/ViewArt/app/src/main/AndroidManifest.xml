@@ -54,9 +54,32 @@
                 android:value="it.unive.ViewArt.activity.MapsActivity" />
         </activity>
 
-        <activity android:name="it.unive.ViewArt.activity.DisambiguationActivity" />
-        <activity android:name="it.unive.ViewArt.activity.ItemInfoActivity" />
-        <activity android:name="it.unive.ViewArt.activity.FilterActivity" />
+        <activity
+            android:name="it.unive.ViewArt.activity.DisambiguationActivity"
+            android:label="ViewArt - Opere Selezionate"
+            android:parentActivityName="it.unive.ViewArt.activity.MapsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="it.unive.ViewArt.activity.MapsActivity" />
+        </activity>
+
+        <activity
+            android:name="it.unive.ViewArt.activity.ItemInfoActivity"
+            android:label="ViewArt - Info Opera"
+            android:parentActivityName="it.unive.ViewArt.activity.MapsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="it.unive.ViewArt.activity.MapsActivity" />
+        </activity>
+
+        <activity
+            android:name="it.unive.ViewArt.activity.FilterActivity"
+            android:label="ViewArt - Filtri"
+            android:parentActivityName="it.unive.ViewArt.activity.MapsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="it.unive.ViewArt.activity.MapsActivity" />
+        </activity>
 
     </application>
 

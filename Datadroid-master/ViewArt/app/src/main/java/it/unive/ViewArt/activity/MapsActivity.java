@@ -56,28 +56,9 @@ import com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindow
 
 import java.util.ArrayList;
 
+import it.unive.ViewArt.R;
 import it.unive.ViewArt.database.DbManager;
 import it.unive.ViewArt.other.Opera;
-import it.unive.ViewArt.R;
-
-import static it.unive.ViewArt.database.DatabaseStrings.AUTORE;
-import static it.unive.ViewArt.database.DatabaseStrings.BENE_CULTURALE;
-import static it.unive.ViewArt.database.DatabaseStrings.CLASSIFICAZIONE;
-import static it.unive.ViewArt.database.DatabaseStrings.COMUNE;
-import static it.unive.ViewArt.database.DatabaseStrings.DATAZIONE;
-import static it.unive.ViewArt.database.DatabaseStrings.DEFINIZIONE;
-import static it.unive.ViewArt.database.DatabaseStrings.DENOMINAZIONE;
-import static it.unive.ViewArt.database.DatabaseStrings.IMG;
-import static it.unive.ViewArt.database.DatabaseStrings.INDIRIZZO;
-import static it.unive.ViewArt.database.DatabaseStrings.LAT;
-import static it.unive.ViewArt.database.DatabaseStrings.LOCALIZZAZIONE;
-import static it.unive.ViewArt.database.DatabaseStrings.LON;
-import static it.unive.ViewArt.database.DatabaseStrings.MATERIA_TECNICA;
-import static it.unive.ViewArt.database.DatabaseStrings.MISURE;
-import static it.unive.ViewArt.database.DatabaseStrings.PROVINCIA;
-import static it.unive.ViewArt.database.DatabaseStrings.REGIONE;
-import static it.unive.ViewArt.database.DatabaseStrings.SOGGETTO;
-import static it.unive.ViewArt.database.DatabaseStrings.TITOLO;
 
 
 public class MapsActivity extends AppCompatActivity
@@ -94,7 +75,6 @@ public class MapsActivity extends AppCompatActivity
      * Creo un database manager per la gestione delle informazioni
      */
     public static DbManager db = null;
-    public static ArrayList<Opera> onClusterClickItemsArray = new ArrayList<>();
     public static SparseArray<Opera> opereArray = new SparseArray<>();
     private static long back_pressed;
     /**
@@ -181,30 +161,34 @@ public class MapsActivity extends AppCompatActivity
      * crea una Lista contenente tutte le opere, serve ad evitare di dovere effettuare più volte delle query alla tabella opere
      */
     private void creaArray() {
-        Cursor cr = db.getDatabaseAccess().rawQuery("SELECT * FROM opere", null);
+        /*Cursor cr = db.getDatabaseAccess().rawQuery(
+                "SELECT _id, lat, lon, img, bene_culturale, titolo, soggetto, localizzazione, datazione, autore, materia_tecnica, misure, definizione, denominazione, classificazione " +
+                        "FROM opere", null);*/
+        Cursor cr = db.getDatabaseAccess().rawQuery("SELECT _id, lat, lon, titolo, autore FROM opere", null);
 
         while (cr.moveToNext()) {
-            Opera opera = new Opera(
-                    Double.parseDouble(cr.getString(cr.getColumnIndex(LAT))),
-                    Double.parseDouble(cr.getString(cr.getColumnIndex(LON))),
-                    cr.getString(cr.getColumnIndex(IMG)),
-                    cr.getString(cr.getColumnIndex(BENE_CULTURALE)),
-                    cr.getString(cr.getColumnIndex(TITOLO)),
-                    cr.getString(cr.getColumnIndex(SOGGETTO)),
-                    cr.getString(cr.getColumnIndex(LOCALIZZAZIONE)),
-                    cr.getString(cr.getColumnIndex(DATAZIONE)),
-                    cr.getString(cr.getColumnIndex(AUTORE)),
-                    cr.getString(cr.getColumnIndex(MATERIA_TECNICA)),
-                    cr.getString(cr.getColumnIndex(MISURE)),
-                    cr.getString(cr.getColumnIndex(DEFINIZIONE)),
-                    cr.getString(cr.getColumnIndex(DENOMINAZIONE)),
-                    cr.getString(cr.getColumnIndex(CLASSIFICAZIONE)),
-                    cr.getString(cr.getColumnIndex(REGIONE)),
-                    cr.getString(cr.getColumnIndex(PROVINCIA)),
-                    cr.getString(cr.getColumnIndex(COMUNE)),
-                    cr.getString(cr.getColumnIndex(INDIRIZZO)));
-
-            opereArray.append(cr.getInt(cr.getColumnIndex("_id")), opera);
+            /*Opera opera = new Opera(
+                    Double.parseDouble(cr.getString(1)),
+                    Double.parseDouble(cr.getString(2)),
+                    cr.getString(3),
+                    cr.getString(4),
+                    cr.getString(5),
+                    cr.getString(6),
+                    cr.getString(7),
+                    cr.getString(8),
+                    cr.getString(9),
+                    cr.getString(10),
+                    cr.getString(11),
+                    cr.getString(12),
+                    cr.getString(13),
+                    cr.getString(14));*/
+            Opera opera = new Opera (
+                    cr.getInt(0),
+                    Double.parseDouble(cr.getString(1)),
+                    Double.parseDouble(cr.getString(2)),
+                    cr.getString(3),
+                    cr.getString(4));
+            opereArray.append(cr.getInt(0), opera);
         }
         cr.close();
     }
@@ -220,13 +204,9 @@ public class MapsActivity extends AppCompatActivity
         super.onStop();
     }
 
-    /**
-     * Applica le impostazioni (preferenze) della mappa ad ogni chiamata.
-     */
     @Override
     protected void onResume() {
         super.onResume();
-        //applyMapSettings();
     }
 
     @Override
@@ -404,8 +384,6 @@ public class MapsActivity extends AppCompatActivity
      */
     @Override
     public void onMapClick(LatLng latLng) {
-        // nascondi il pulsante della navigazione (non quello di google maps, ma il nostro pulsante custom)
-        button_car.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -416,7 +394,6 @@ public class MapsActivity extends AppCompatActivity
      */
     @Override
     public void onMapLongClick(LatLng latLng) {
-
     }
 
     /**
@@ -427,21 +404,8 @@ public class MapsActivity extends AppCompatActivity
      */
     @Override
     public void onCameraMoveStarted(int reason) {
-        button_here.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Questo metodo è molto importante: esso viene invocato dal sistema quando la mappa è pronta.
-     * Il parametro è l'oggetto di tipo GoogleMap pronto all'uso, che viene immediatamente assegnato ad un campo interno della
-     * classe.
-     * La natura asincrona di questo metodo, e quindi dell'inizializzazione del campo gMap, implica che tutte le
-     * operazioni che coinvolgono la mappa e che vanno eseguite appena essa diventa disponibile, vanno messe in questo metodo.
-     * Ciò non significa che tutte le operazioni che coinvolgono la mappa vanno eseguite qui: è naturale aver bisogno di accedere al campo
-     * gMap in altri metodi, per eseguire operazioni sulla mappa in vari momenti, ma è necessario tenere a mente che tale campo potrebbe
-     * essere ancora non inizializzato e va pertanto verificata la nullness.
-     *
-     * @param googleMap oggetto di tipo GoogleMap.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
@@ -469,11 +433,10 @@ public class MapsActivity extends AppCompatActivity
         uis.setZoomControlsEnabled(true);
         uis.setMapToolbarEnabled(true);
 
-        //applyMapSettings();
-        mClusterManager = new ClusterManager<Opera>(this, gMap);
-        //mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager = new ClusterManager<>(this, gMap);
         mClusterManager.setOnClusterClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
         gMap.setOnCameraIdleListener(mClusterManager);
@@ -482,7 +445,7 @@ public class MapsActivity extends AppCompatActivity
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         //Decide se creare la visualizzazione da primo avvio o se ci sono dei filtri da applicare
-        if (getIntent().getBooleanExtra("Filtri", false) && filterNumber() > 0)
+        if (getIntent().getBooleanExtra("Filtri", false) || filterNumber() > 0)
             filteredAction();
         else
             defaultAction();
@@ -613,7 +576,6 @@ public class MapsActivity extends AppCompatActivity
                         "select _id from opere, tipologie where opere.bene_culturale = tipologie.tipologia and tipologie.selezionato = 1", null);
 
         mClusterManager.clearItems();
-        mClusterManager.setAnimation(false);
         if (cr.getCount() == 0)
             for (int i = 1; i <= opereArray.size(); i++)
                 mClusterManager.addItem(opereArray.get(i));
@@ -621,14 +583,18 @@ public class MapsActivity extends AppCompatActivity
             while (cr.moveToNext())
                 mClusterManager.addItem(opereArray.get(cr.getInt(0)));
 
-        mClusterManager.setAnimation(true);
         cr.close();
     }
 
     @Override
     public boolean onClusterClick(Cluster<Opera> cluster) {
         Intent intent = new Intent(MapsActivity.this, DisambiguationActivity.class);
-        onClusterClickItemsArray.addAll(cluster.getItems());
+        ArrayList<Integer> clusterItemIndex = new ArrayList<>();
+
+        for (Opera o : cluster.getItems())
+            clusterItemIndex.add(o.getId());
+
+        intent.putExtra("cluster", clusterItemIndex);
         startActivity(intent);
         return false;
     }
