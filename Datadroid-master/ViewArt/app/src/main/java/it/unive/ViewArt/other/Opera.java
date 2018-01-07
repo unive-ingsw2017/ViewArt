@@ -56,7 +56,7 @@ public class Opera implements ClusterItem {
 
     @Override
     public String getSnippet() {
-        return "Autore: " + format(autore);
+        return "Autore: " + getAutore();
     }
 
     public String getImgUrl() {
@@ -104,6 +104,8 @@ public class Opera implements ClusterItem {
     }
 
     public String getAutore() {
+        if(autore.charAt(0) == ' ')
+            return format(autore.replaceFirst(" ", ""));
         return format(autore);
     }
 
@@ -169,4 +171,5 @@ public class Opera implements ClusterItem {
     public boolean toSet() {
         return bene_culturale == null;
     }
+
 }

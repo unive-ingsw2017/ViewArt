@@ -32,7 +32,6 @@ public class ItemInfoActivity extends AppCompatActivity {
 
         Opera opera = opereArray.get(getIntent().getIntExtra("operaId", -1));
         int id = opera.getId();
-
         if (opera.toSet()) {
             Cursor cr = MapsActivity.db.getDatabaseAccess().rawQuery("SELECT img, bene_culturale, soggetto, localizzazione, datazione, materia_tecnica, misure, definizione, denominazione, classificazione FROM opere WHERE _id = '" + id + "'", null);
             cr.moveToFirst();

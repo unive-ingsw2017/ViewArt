@@ -13,7 +13,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="#455A64"
+        android:background="@color/list"
         android:scaleType="centerInside"
         android:src="@drawable/loader"
         app:layout_constraintBottom_toTopOf="@+id/listViewInfo"

@@ -15,6 +15,7 @@
     <color name="button_main_color">#273445</color>
     <color name="trans">#00000000 </color>
     <color name="buttons_map">#E1E1D9</color>
+    <color name="list">#c7e5ff</color>
 
 
 </resources>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:minHeight="50dp"
@@ -8,38 +10,58 @@
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/image"
-        android:layout_width="95dp"
-        android:layout_height="90dp"
+        android:layout_width="125dp"
+        android:layout_height="97dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="10dp"
-        android:src="@drawable/loader" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/loader"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.035"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:layout_toEndOf="@id/image"
         android:minLines="2"
         android:paddingTop="5dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/info2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@id/image" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <TextView
         android:id="@+id/info1"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/info2"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@id/image" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/image"
+        app:layout_constraintTop_toBottomOf="@+id/info2" />
 
 
-
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
