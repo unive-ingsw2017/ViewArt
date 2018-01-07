@@ -14,7 +14,6 @@
         android:layout_height="match_parent"
         android:background="@color/list"
         app:fastScrollEnabled="true"
-        
         app:fastScrollHorizontalThumbDrawable="@drawable/thumb_drawable"
         app:fastScrollHorizontalTrackDrawable="@drawable/line_drawable"
         app:fastScrollVerticalThumbDrawable="@drawable/thumb_drawable"

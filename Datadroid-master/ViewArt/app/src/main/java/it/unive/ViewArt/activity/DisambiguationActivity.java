@@ -38,8 +38,7 @@ public class DisambiguationActivity extends AppCompatActivity {
         itemIdArray = getIntent().getIntegerArrayListExtra("cluster");
         ArrayList<Opera> arrayItem = moreOpere();
 
-
-        rvOpere = (RecyclerView) findViewById(R.id.custom_list);
+        rvOpere = findViewById(R.id.custom_list);
 
         adapter = new DisambiguationAdapter(arrayItem, new DisambiguationAdapter.OnItemClickListener() {
             @Override
@@ -52,7 +51,6 @@ public class DisambiguationActivity extends AppCompatActivity {
 
         rvOpere.setAdapter(adapter);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rvOpere.setLayoutManager(new LinearLayoutManager(this));
 
         //animations

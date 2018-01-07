@@ -28,26 +28,21 @@ public class DisambiguationAdapter extends RecyclerView.Adapter<DisambiguationAd
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        // Inflate the custom layout
         View opereView = inflater.inflate(R.layout.row, parent, false);
 
-        // Return a new holder instance
         return new ViewHolder(opereView);
     }
 
-    // Involves populating data into the item through holder
     @Override
     public void onBindViewHolder(DisambiguationAdapter.ViewHolder viewHolder, int position) {
-        // Get the data model based on position
         Opera opera = arrayOpere.get(position);
 
-        // Set item views based on your views and data model
         TextView titleView = viewHolder.titleView;
         TextView infoView1 = viewHolder.infoView1;
         TextView infoView2 = viewHolder.infoView2;
         ImageView immagine = viewHolder.imageView;
 
-        titleView.setText(opera.getTitolo());
+        titleView.setText(String.format(opera.getTitolo() + "  (%d)", position));
         infoView1.setText(opera.getAutore());
         infoView2.setText(opera.getBene_culturale());
 
@@ -76,23 +71,17 @@ public class DisambiguationAdapter extends RecyclerView.Adapter<DisambiguationAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        // Your holder should contain a member variable
-        // for any view that will be set as you render a row
         private TextView titleView;
         private TextView infoView1;
         private TextView infoView2;
         private ImageView imageView;
 
-        // We also create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
             super(itemView);
-            titleView = (TextView) itemView.findViewById(R.id.title);
-            infoView1 = (TextView) itemView.findViewById(R.id.info1);
-            infoView2 = (TextView) itemView.findViewById(R.id.info2);
-            imageView = (ImageView) itemView.findViewById(R.id.image);
+            titleView = itemView.findViewById(R.id.title);
+            infoView1 = itemView.findViewById(R.id.info1);
+            infoView2 = itemView.findViewById(R.id.info2);
+            imageView = itemView.findViewById(R.id.image);
         }
 
         public void bind(final Opera item, final OnItemClickListener listener) {
