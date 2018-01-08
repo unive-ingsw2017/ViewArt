@@ -49,7 +49,6 @@ public class DisambiguationActivity extends AppCompatActivity {
             }
         });
 
-        rvOpere.setAdapter(adapter);
 
         rvOpere.setLayoutManager(new LinearLayoutManager(this));
 

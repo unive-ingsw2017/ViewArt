@@ -78,6 +78,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="it.unive.ViewArt.activity.MapsActivity" />
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable">
+            </meta-data>
         </activity>
 
     </application>

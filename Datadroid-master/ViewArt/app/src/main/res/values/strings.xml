@@ -44,5 +44,6 @@
     <string name="tipologia">Tipologia</string>
     <string name="data">Data</string>
     <string name="filtri">Filtri</string>
+    <string name="search_title">Cerca...</string>
 
 </resources>

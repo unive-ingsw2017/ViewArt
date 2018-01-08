@@ -1,5 +1,7 @@
 package it.unive.ViewArt.activity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -7,9 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.BottomNavigationView.OnNavigationItemSelectedListener;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -24,11 +29,12 @@ import static it.unive.ViewArt.database.DatabaseStrings.DATE;
 import static it.unive.ViewArt.database.DatabaseStrings.TIPOLOGIA;
 import static it.unive.ViewArt.database.DatabaseStrings.TIPOLOGIE;
 
-public class FilterActivity extends AppCompatActivity {
+public class FilterActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private ListView autori;
     private ListView date;
     private ListView tipologie;
+    private SearchView searchbar;
 
     private OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new OnNavigationItemSelectedListener() {
 
@@ -93,9 +99,55 @@ public class FilterActivity extends AppCompatActivity {
         return buffer;
     }
 
+    ArrayList<SimpleEntry<String, Integer>> retriveFilteredInformation(String tabella, String colonna, String filtro) {
+        ArrayList<SimpleEntry<String, Integer>> buffer = new ArrayList<>();
+        Cursor cr = MapsActivity.db.getDatabaseAccess().rawQuery("SELECT * FROM " + tabella + " WHERE "+colonna+" LIKE '%"+filtro+"%' order by selezionato desc", null);
+
+        while (cr.moveToNext())
+            buffer.add(new SimpleEntry<>(cr.getString(cr.getColumnIndex(colonna)), cr.getInt(cr.getColumnIndex("selezionato"))));
+
+        cr.close();
+        return buffer;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        onBackPressed();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
+
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(this);
+
         return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) { // prima versione senza live search
+        autori.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveFilteredInformation(AUTORI, AUTORE, s), AUTORI, AUTORE));
+        tipologie.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveFilteredInformation(TIPOLOGIE, TIPOLOGIA,s), TIPOLOGIE, TIPOLOGIA));
+        date.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveFilteredInformation(DATE, DATA,s), DATE, DATA));
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
     }
 }
