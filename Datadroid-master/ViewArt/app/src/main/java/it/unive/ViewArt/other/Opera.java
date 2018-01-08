@@ -1,7 +1,13 @@
 package it.unive.ViewArt.other;
 
+import android.database.Cursor;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
+
+import it.unive.ViewArt.activity.MapsActivity;
+
+import static it.unive.ViewArt.activity.MapsActivity.db;
 
 
 public class Opera implements ClusterItem {
@@ -60,7 +66,15 @@ public class Opera implements ClusterItem {
     }
 
     public String getImgUrl() {
+        if (img == null) {
+            Cursor cr = MapsActivity.db.getDatabaseAccess().rawQuery("SELECT img FROM opere WHERE _id='" + id + "'", null);
+            cr.moveToFirst();
+            img = cr.getString(0);
+            cr.close();
+        }
+
         return img;
+
     }
 
     public String getBene_culturale() {
@@ -104,7 +118,7 @@ public class Opera implements ClusterItem {
     }
 
     public String getAutore() {
-        if(autore.charAt(0) == ' ')
+        if (autore.charAt(0) == ' ')
             return format(autore.replaceFirst(" ", ""));
         return format(autore);
     }
