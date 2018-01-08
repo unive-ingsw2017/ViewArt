@@ -16,6 +16,8 @@
         android:background="@color/list"
         android:scaleType="centerInside"
         android:src="@drawable/loader"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
         app:layout_constraintBottom_toTopOf="@+id/listViewInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.523"

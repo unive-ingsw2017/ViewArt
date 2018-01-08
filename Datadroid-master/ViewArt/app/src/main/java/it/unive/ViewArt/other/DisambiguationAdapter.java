@@ -3,24 +3,27 @@ package it.unive.ViewArt.other;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import it.unive.ViewArt.R;
+import pl.droidsonroids.gif.GifImageView;
 
 public class DisambiguationAdapter extends RecyclerView.Adapter<DisambiguationAdapter.ViewHolder> {
     private final OnItemClickListener listener;
     private ArrayList<Opera> arrayOpere;
-    private ArrayList<AsyncTask> tasks = new ArrayList<>();
+    private ArrayMap<Integer, AsyncTask> tasks = new ArrayMap<>();
+    private Context context;
 
-    public DisambiguationAdapter(ArrayList<Opera> arrayOpere, OnItemClickListener listener) {
+    public DisambiguationAdapter(Context context, ArrayList<Opera> arrayOpere, OnItemClickListener listener) {
         this.arrayOpere = arrayOpere;
         this.listener = listener;
+        this.context = context;
     }
 
     @Override
@@ -29,7 +32,6 @@ public class DisambiguationAdapter extends RecyclerView.Adapter<DisambiguationAd
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View opereView = inflater.inflate(R.layout.row, parent, false);
-
         return new ViewHolder(opereView);
     }
 
@@ -40,13 +42,20 @@ public class DisambiguationAdapter extends RecyclerView.Adapter<DisambiguationAd
         TextView titleView = viewHolder.titleView;
         TextView infoView1 = viewHolder.infoView1;
         TextView infoView2 = viewHolder.infoView2;
-        ImageView immagine = viewHolder.imageView;
+        GifImageView immagine = viewHolder.imageView;
 
         titleView.setText(String.format(opera.getTitolo() + "  (%d)", position));
         infoView1.setText(opera.getAutore());
         infoView2.setText(opera.getBene_culturale());
 
-        tasks.add(new ImageDownloaderTask(immagine).execute(arrayOpere.get(position).getImgUrl(), "" + 8)); //compressione 8x
+
+        GlideApp.with(context)
+                .load(arrayOpere.get(position).getImgUrl())
+                //.placeholder(R.drawable.loader)
+                //.thumbnail(GlideApp.with(context).load(R.drawable.loader))
+                .error(R.drawable.no_image)
+                .into(immagine);
+
 
         viewHolder.bind(arrayOpere.get(position), listener);
     }
@@ -62,21 +71,22 @@ public class DisambiguationAdapter extends RecyclerView.Adapter<DisambiguationAd
     }
 
     public void terminateAsyncTasks() {
-        for (AsyncTask task : tasks)
-            task.cancel(true);
+        for (int i = 0; i < tasks.size(); i++) {
+            tasks.get(i).cancel(true);
+        }
     }
 
     public interface OnItemClickListener {
         void onItemClick(Opera item);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public final class ViewHolder extends RecyclerView.ViewHolder {
         private TextView titleView;
         private TextView infoView1;
         private TextView infoView2;
-        private ImageView imageView;
+        private GifImageView imageView;
 
-        public ViewHolder(View itemView) {
+        private ViewHolder(View itemView) {
             super(itemView);
             titleView = itemView.findViewById(R.id.title);
             infoView1 = itemView.findViewById(R.id.info1);
@@ -84,7 +94,7 @@ public class DisambiguationAdapter extends RecyclerView.Adapter<DisambiguationAd
             imageView = itemView.findViewById(R.id.image);
         }
 
-        public void bind(final Opera item, final OnItemClickListener listener) {
+        private void bind(final Opera item, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

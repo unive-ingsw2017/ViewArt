@@ -40,7 +40,7 @@ public class DisambiguationActivity extends AppCompatActivity {
 
         rvOpere = findViewById(R.id.custom_list);
 
-        adapter = new DisambiguationAdapter(arrayItem, new DisambiguationAdapter.OnItemClickListener() {
+        adapter = new DisambiguationAdapter(this, arrayItem, new DisambiguationAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Opera item) {
                 Intent intent = new Intent(DisambiguationActivity.this, ItemInfoActivity.class);

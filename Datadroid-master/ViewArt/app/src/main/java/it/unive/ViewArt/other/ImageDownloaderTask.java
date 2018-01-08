@@ -33,18 +33,16 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if (isCancelled()) {
-            bitmap = null;
-        }
+        if (!isCancelled()) {
+            ImageView imageView = imageViewReference.get();
 
-        ImageView imageView = imageViewReference.get();
-
-        if (imageView != null) {
-            if (bitmap != null) {
-                imageView.setImageBitmap(bitmap);
-            } else {
-                Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.no_image);
-                imageView.setImageDrawable(placeholder);
+            if (imageView != null) {
+                if (bitmap != null) {
+                    imageView.setImageBitmap(bitmap);
+                } else {
+                    Drawable placeholder = imageView.getContext().getDrawable(R.drawable.no_image);
+                    imageView.setImageDrawable(placeholder);
+                }
             }
         }
 
@@ -63,7 +61,7 @@ public class ImageDownloaderTask extends AsyncTask<String, Void, Bitmap> {
 
             if (inputStream != null) {
                 BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 2;
+                options.inSampleSize = scale;
                 return BitmapFactory.decodeStream(inputStream, null, options);
             }
 
