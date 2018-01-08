@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unive.ViewArt.R;
-import it.unive.ViewArt.other.ImageDownloaderTask;
+import it.unive.ViewArt.other.GlideApp;
 import it.unive.ViewArt.other.Opera;
 
 import static it.unive.ViewArt.activity.MapsActivity.opereArray;
@@ -33,26 +33,35 @@ public class ItemInfoActivity extends AppCompatActivity {
         Opera opera = opereArray.get(getIntent().getIntExtra("operaId", -1));
         int id = opera.getId();
         if (opera.toSet()) {
-            Cursor cr = MapsActivity.db.getDatabaseAccess().rawQuery("SELECT img, bene_culturale, soggetto, localizzazione, datazione, materia_tecnica, misure, definizione, denominazione, classificazione FROM opere WHERE _id = '" + id + "'", null);
+            Cursor cr = MapsActivity.db.getDatabaseAccess().rawQuery("SELECT bene_culturale, soggetto, localizzazione, datazione, materia_tecnica, misure, definizione, denominazione, classificazione FROM opere WHERE _id = '" + id + "'", null);
             cr.moveToFirst();
-            opereArray.get(id).setImg(cr.getString(0));
-            opereArray.get(id).setBene_culturale(cr.getString(1));
-            opereArray.get(id).setSoggetto(cr.getString(2));
-            opereArray.get(id).setLocalizzazione(cr.getString(3));
-            opereArray.get(id).setDatazione(cr.getString(4));
-            opereArray.get(id).setMateria_tecnica(cr.getString(5));
-            opereArray.get(id).setMisure(cr.getString(6));
-            opereArray.get(id).setDefinizione(cr.getString(7));
-            opereArray.get(id).setDenominazione(cr.getString(8));
-            opereArray.get(id).setClassificazione(cr.getString(9));
+            opereArray.get(id).setBene_culturale(cr.getString(0));
+            opereArray.get(id).setSoggetto(cr.getString(1));
+            opereArray.get(id).setLocalizzazione(cr.getString(2));
+            opereArray.get(id).setDatazione(cr.getString(3));
+            opereArray.get(id).setMateria_tecnica(cr.getString(4));
+            opereArray.get(id).setMisure(cr.getString(5));
+            opereArray.get(id).setDefinizione(cr.getString(6));
+            opereArray.get(id).setDenominazione(cr.getString(7));
+            opereArray.get(id).setClassificazione(cr.getString(8));
             cr.close();
             opera = opereArray.get(id);
         }
 
-        ImageView immagine = (ImageView) findViewById(R.id.image);
-        new ImageDownloaderTask(immagine).execute(opera.getImgUrl(), "" + 2);  //compressione 2x
+        ImageView immagine = findViewById(R.id.image);
+        if (opera.getImgUrl().equals(""))
+            immagine.setImageDrawable(this.getDrawable(R.drawable.no_image));
+        else {
+            GlideApp.with(this)
+                    .load(opera.getImgUrl())
+                    .placeholder(R.drawable.loader)
+                    .thumbnail(GlideApp.with(this).load(R.drawable.loader))
+                    .encodeQuality(100)
+                    .fitCenter()
+                    .into(immagine);
+        }
 
-        ListView information = (ListView) findViewById(R.id.listViewInfo);
+        ListView information = findViewById(R.id.listViewInfo);
 
         List<String> buffer = new ArrayList<>();
         buffer.add("Autore :" + opera.getAutore());

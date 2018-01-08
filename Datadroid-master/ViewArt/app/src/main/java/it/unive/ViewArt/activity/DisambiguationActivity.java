@@ -1,7 +1,6 @@
 package it.unive.ViewArt.activity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -100,12 +99,6 @@ public class DisambiguationActivity extends AppCompatActivity {
         ArrayList<Opera> buffer = new ArrayList<>();
         int i = 0;
         while (i < 50 && index < itemIdArray.size()) {
-            if (opereArray.get(itemIdArray.get(index)).getImgUrl() == null) {
-                Cursor cr = MapsActivity.db.getDatabaseAccess().rawQuery("SELECT img FROM opere WHERE _id = '" + itemIdArray.get(index) + "'", null);
-                cr.moveToFirst();
-                opereArray.get(itemIdArray.get(index)).setImg(cr.getString(0));
-                cr.close();
-            }
             buffer.add(opereArray.get(itemIdArray.get(index)));
             index++;
             i++;
