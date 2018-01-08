@@ -11,6 +11,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -21,11 +22,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -58,6 +62,7 @@ import java.util.ArrayList;
 
 import it.unive.ViewArt.R;
 import it.unive.ViewArt.database.DbManager;
+import it.unive.ViewArt.other.ImageDownloaderTask;
 import it.unive.ViewArt.other.Opera;
 
 
@@ -65,7 +70,7 @@ public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnMarkerClickListener, OnClusterClickListener<Opera>, OnClusterItemInfoWindowClickListener<Opera> {
+        GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraMoveStartedListener, OnClusterClickListener<Opera>, OnClusterItemInfoWindowClickListener<Opera> {
 
     protected static final int REQUEST_CHECK_SETTINGS = 500;
     protected static final int PERMISSIONS_REQUEST_ACCESS_BOTH_LOCATION = 501;
@@ -103,6 +108,7 @@ public class MapsActivity extends AppCompatActivity
     @Nullable
     protected Marker hereMarker = null;
     private ClusterManager<Opera> mClusterManager;
+    private Opera clickedItem;
 
     /**
      * Questo metodo viene invocato quando viene inizializzata questa activity.
@@ -418,6 +424,15 @@ public class MapsActivity extends AppCompatActivity
         mClusterManager = new ClusterManager<>(this, gMap);
         mClusterManager.setOnClusterClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+        mClusterManager.setOnClusterItemClickListener(
+                new ClusterManager.OnClusterItemClickListener<Opera>() {
+                    @Override public boolean onClusterItemClick(Opera clusterItem) {
+                        clickedItem = clusterItem;
+                        return false;
+                    }
+                });
+        mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new CustomInfoViewAdapter(LayoutInflater.from(this)));
+
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
@@ -425,6 +440,8 @@ public class MapsActivity extends AppCompatActivity
         gMap.setOnMarkerClickListener(mClusterManager);
         gMap.setOnInfoWindowClickListener(mClusterManager);
         gMap.getUiSettings().setMyLocationButtonEnabled(false);
+        gMap.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+
 
         //Decide se creare la visualizzazione da primo avvio o se ci sono dei filtri da applicare
         if (getIntent().getBooleanExtra("Filtri", false) || filterNumber() > 0)
@@ -468,30 +485,6 @@ public class MapsActivity extends AppCompatActivity
         startActivity(navigation);
     }
 
-    /**
-     * Callback che viene invocata quando viene cliccato un marker.
-     * Questo metodo viene invocato al click di QUALUNQUE marker nella mappa; pertanto, se è necessario
-     * eseguire comportamenti specifici per un certo marker o gruppo di marker, va modificato questo metodo
-     * con codice che si occupa di discernere tra un marker e l'altro in qualche modo.
-     *
-     * @param marker il marker che è stato cliccato.
-     * @return ritorna true per continuare a chiamare altre callback nella catena di callback per i marker; false altrimenti.
-     */
-    @Override
-    public boolean onMarkerClick(final Marker marker) {
-        marker.showInfoWindow();
-        button_car.setVisibility(View.VISIBLE);
-        button_car.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, R.string.msg_button_car, Snackbar.LENGTH_SHORT);
-                if (currentPosition != null) {
-                    navigate(currentPosition, marker.getPosition());
-                }
-            }
-        });
-        return false;
-    }
 
 
     // defaultAction code
@@ -598,6 +591,60 @@ public class MapsActivity extends AppCompatActivity
             Toast.makeText(getBaseContext(), "Premere nuovamente per uscire", Toast.LENGTH_SHORT).show();
             back_pressed = System.currentTimeMillis();
         }
+    }
 
+    public class CustomInfoViewAdapter implements GoogleMap.InfoWindowAdapter {
+
+        private final LayoutInflater mInflater;
+
+        public CustomInfoViewAdapter(LayoutInflater inflater) {
+            this.mInflater = inflater;
+        }
+
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            View view = mInflater.inflate(R.layout.info_window, null);
+
+            TextView name_tv = view.findViewById(R.id.name);
+            TextView details_tv = view.findViewById(R.id.details);
+            ImageView img = view.findViewById(R.id.pic);
+
+
+
+            name_tv.setText(clickedItem.getTitle());
+            details_tv.setText(clickedItem.getSnippet());
+            ImageView immagine = (ImageView) findViewById(R.id.pic);
+
+            boolean not_first_time_showing_info_window= false;
+            if (not_first_time_showing_info_window) {
+                Glide.with(ActivityClass.this).load(restaurantPictureURL).into(imgInfoWindowPicture);
+            } else { // if it's the first time, load the image with the callback set
+                not_first_time_showing_info_window=true;
+                Glide.with(ActivityClass.this).load(restaurantPictureURL).into(imgInfoWindowPicture,new InfoWindowRefresher(marker));
+            }
+            return view;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            return null;
+        }
+    }
+
+    private class InfoWindowRefresher implements Callback {
+        private Marker markerToRefresh;
+
+        private InfoWindowRefresher(Marker markerToRefresh) {
+            this.markerToRefresh = markerToRefresh;
+        }
+
+        @Override
+        public void onSuccess() {
+            markerToRefresh.showInfoWindow();
+        }
+
+        @Override
+        public void onError() {}
     }
 }
