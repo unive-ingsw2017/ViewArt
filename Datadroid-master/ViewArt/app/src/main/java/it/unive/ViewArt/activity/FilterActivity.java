@@ -35,6 +35,10 @@ public class FilterActivity extends AppCompatActivity implements SearchView.OnQu
     private ListView date;
     private ListView tipologie;
     private SearchView searchbar;
+    private CustomAdapterChecked adapterAutori;
+    private CustomAdapterChecked adapterTipologie;
+    private CustomAdapterChecked adapterDate;
+
 
     private OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new OnNavigationItemSelectedListener() {
 
@@ -67,14 +71,17 @@ public class FilterActivity extends AppCompatActivity implements SearchView.OnQu
         setContentView(R.layout.activity_filter);
 
         autori = (ListView) findViewById(R.id.autori);
-        autori.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(AUTORI, AUTORE), AUTORI, AUTORE));
+        adapterAutori = new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(AUTORI, AUTORE), AUTORI, AUTORE);
+        autori.setAdapter(adapterAutori);
         autori.setItemsCanFocus(false);
 
         date = (ListView) findViewById(R.id.date);
-        date.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(DATE, DATA), DATE, DATA));
+        adapterDate = new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(DATE, DATA), DATE, DATA);
+        date.setAdapter(adapterDate);
 
         tipologie = (ListView) findViewById(R.id.tipologie);
-        tipologie.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(TIPOLOGIE, TIPOLOGIA), TIPOLOGIE, TIPOLOGIA));
+        adapterTipologie = new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(TIPOLOGIE, TIPOLOGIA), TIPOLOGIE, TIPOLOGIA);
+        tipologie.setAdapter(adapterTipologie);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -140,14 +147,15 @@ public class FilterActivity extends AppCompatActivity implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextSubmit(String s) { // prima versione senza live search
-        autori.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveFilteredInformation(AUTORI, AUTORE, s), AUTORI, AUTORE));
-        tipologie.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveFilteredInformation(TIPOLOGIE, TIPOLOGIA,s), TIPOLOGIE, TIPOLOGIA));
-        date.setAdapter(new CustomAdapterChecked(this, R.layout.activity_filter, retriveFilteredInformation(DATE, DATA,s), DATE, DATA));
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String s) {
+        adapterTipologie.getFilter().filter(s);
+        adapterAutori.getFilter().filter(s);
+        adapterDate.getFilter().filter(s);
+
         return false;
     }
 }
