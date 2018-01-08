@@ -48,14 +48,15 @@ public class DisambiguationAdapter extends RecyclerView.Adapter<DisambiguationAd
         infoView1.setText(opera.getAutore());
         infoView2.setText(opera.getBene_culturale());
 
-
-        GlideApp.with(context)
-                .load(arrayOpere.get(position).getImgUrl())
-                //.placeholder(R.drawable.loader)
-                //.thumbnail(GlideApp.with(context).load(R.drawable.loader))
-                .error(R.drawable.no_image)
-                .into(immagine);
-
+        if (arrayOpere.get(position).getImgUrl().equals(""))
+            immagine.setImageDrawable(context.getDrawable(R.drawable.no_image));
+        else {
+            GlideApp.with(context)
+                    .load(arrayOpere.get(position).getImgUrl())
+                    .placeholder(R.drawable.loader)
+                    .thumbnail(GlideApp.with(context).load(R.drawable.loader))
+                    .into(immagine);
+        }
 
         viewHolder.bind(arrayOpere.get(position), listener);
     }
