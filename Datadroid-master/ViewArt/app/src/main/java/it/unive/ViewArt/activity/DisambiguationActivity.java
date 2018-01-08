@@ -83,12 +83,6 @@ public class DisambiguationActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        adapter.terminateAsyncTasks();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         onBackPressed();
         return true;

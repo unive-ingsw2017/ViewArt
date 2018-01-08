@@ -1,9 +1,7 @@
 package it.unive.ViewArt.other;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,6 @@ import pl.droidsonroids.gif.GifImageView;
 public class DisambiguationAdapter extends RecyclerView.Adapter<DisambiguationAdapter.ViewHolder> {
     private final OnItemClickListener listener;
     private ArrayList<Opera> arrayOpere;
-    private ArrayMap<Integer, AsyncTask> tasks = new ArrayMap<>();
     private Context context;
 
     public DisambiguationAdapter(Context context, ArrayList<Opera> arrayOpere, OnItemClickListener listener) {
@@ -70,12 +67,6 @@ public class DisambiguationAdapter extends RecyclerView.Adapter<DisambiguationAd
     @Override
     public long getItemId(int position) {
         return (long) position;
-    }
-
-    public void terminateAsyncTasks() {
-        for (int i = 0; i < tasks.size(); i++) {
-            tasks.get(i).cancel(true);
-        }
     }
 
     public interface OnItemClickListener {
