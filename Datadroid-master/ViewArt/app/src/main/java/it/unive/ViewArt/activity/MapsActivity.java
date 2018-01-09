@@ -10,10 +10,8 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -35,12 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -69,8 +62,6 @@ import com.google.maps.android.clustering.ClusterManager.OnClusterClickListener;
 import com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindowClickListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import it.unive.ViewArt.R;
 import it.unive.ViewArt.database.DbManager;
@@ -121,6 +112,7 @@ public class MapsActivity extends AppCompatActivity
     protected Marker hereMarker = null;
     private ClusterManager<Opera> mClusterManager;
     private Opera clickedItem;
+    private static boolean firstTime = true;
 
     /**
      * Questo metodo viene invocato quando viene inizializzata questa activity.
@@ -438,7 +430,8 @@ public class MapsActivity extends AppCompatActivity
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
         mClusterManager.setOnClusterItemClickListener(
                 new ClusterManager.OnClusterItemClickListener<Opera>() {
-                    @Override public boolean onClusterItemClick(Opera clusterItem) {
+                    @Override
+                    public boolean onClusterItemClick(Opera clusterItem) {
                         clickedItem = clusterItem;
                         return false;
                     }
@@ -456,7 +449,10 @@ public class MapsActivity extends AppCompatActivity
 
 
         //Decide se creare la visualizzazione da primo avvio o se ci sono dei filtri da applicare
-        if (getIntent().getBooleanExtra("Filtri", false) || filterNumber() > 0)
+        if (firstTime) {
+            filteredAction();
+            firstTime = false;
+        } else if (getIntent().getBooleanExtra("Filtri", false) && filterNumber() > 0)
             filteredAction();
         else
             defaultAction();
@@ -496,7 +492,6 @@ public class MapsActivity extends AppCompatActivity
         Log.i(TAG, String.format("starting navigation from %s to %s", from, to));
         startActivity(navigation);
     }
-
 
 
     // defaultAction code
@@ -619,31 +614,35 @@ public class MapsActivity extends AppCompatActivity
         public View getInfoWindow(Marker marker) {
             View view = mInflater.inflate(R.layout.info_window, null);
 
-            TextView name_tv = view.findViewById(R.id.title);
-            TextView details_tv = view.findViewById(R.id.snippet);
+            TextView titolo = view.findViewById(R.id.title);
+            TextView autore = view.findViewById(R.id.snippet);
             ImageView img = view.findViewById(R.id.pic);
 
+            titolo.setText(clickedItem.getTitle());
+            autore.setText(clickedItem.getSnippet());
 
+            if (clickedItem.getImgUrl().equals("")) {
+                img.setImageDrawable(img.getContext().getDrawable(R.drawable.no_image));
+                marker.showInfoWindow();
+            } else {
+                GlideApp.with(getContext())
+                        .load(clickedItem.getImgUrl())
+                        .fitCenter()
+                        .error(R.drawable.no_image)
+                        .encodeQuality(50)
+                        .into(new SimpleTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, Transition<? super Drawable> transition) {
+                                img.setImageDrawable(resource);
+                                String url = clickedItem.getImgUrl();
+                                if (!TextUtils.equals(url, previousImageUrl) && marker.isInfoWindowShown()) {
+                                    previousImageUrl = url;
+                                    marker.showInfoWindow();
+                                }
 
-            name_tv.setText(clickedItem.getTitle());
-            details_tv.setText(clickedItem.getSnippet());
-
-
-            GlideApp.with(getContext()).load(clickedItem.getImgUrl())
-                    .override(200, 300) // made the difference
-                    .centerCrop()
-                    .into(new SimpleTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                            img.setImageDrawable(resource);
-                            String url= clickedItem.getImgUrl();
-                            if (!TextUtils.equals(url, previousImageUrl)) {
-                                previousImageUrl = url;
-                                marker.showInfoWindow();
                             }
-
-                        }
-                    });
+                        });
+            }
             return view;
         }
 
@@ -655,10 +654,9 @@ public class MapsActivity extends AppCompatActivity
 
     }
 
-    public MapsActivity getContext(){
+    public MapsActivity getContext() {
         return this;
     }
-
 
 
 }

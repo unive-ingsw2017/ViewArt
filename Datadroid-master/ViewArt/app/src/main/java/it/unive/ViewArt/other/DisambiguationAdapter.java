@@ -54,6 +54,7 @@ public class DisambiguationAdapter extends RecyclerView.Adapter<DisambiguationAd
                     .encodeQuality(30)
                     .thumbnail(GlideApp.with(context).load(R.drawable.loader))
                     .into(immagine);
+
         }
 
         viewHolder.bind(arrayOpere.get(position), listener);

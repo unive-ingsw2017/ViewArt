@@ -7,8 +7,6 @@ import com.google.maps.android.clustering.ClusterItem;
 
 import it.unive.ViewArt.activity.MapsActivity;
 
-import static it.unive.ViewArt.activity.MapsActivity.db;
-
 
 public class Opera implements ClusterItem {
     private int id;
@@ -78,6 +76,12 @@ public class Opera implements ClusterItem {
     }
 
     public String getBene_culturale() {
+        if (bene_culturale == null) {
+            Cursor cr = MapsActivity.db.getDatabaseAccess().rawQuery("SELECT bene_culturale FROM opere WHERE _id='" + id + "'", null);
+            cr.moveToFirst();
+            bene_culturale = cr.getString(0);
+            cr.close();
+        }
         return format(bene_culturale);
     }
 

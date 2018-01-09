@@ -45,5 +45,6 @@
     <string name="data">Data</string>
     <string name="filtri">Filtri</string>
     <string name="search_title">Cerca...</string>
+    <string name="titolo">Titolo</string>
 
 </resources>

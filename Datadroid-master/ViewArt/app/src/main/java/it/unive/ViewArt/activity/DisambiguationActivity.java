@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
@@ -65,7 +64,6 @@ public class DisambiguationActivity extends AppCompatActivity {
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener() {
             @Override
             public void onLoadMore(int page, RecyclerView view) {
-                Log.e("ENTRO", "ENTRATO");
                 List<Opera> moreOpere = moreOpere();
                 int curSize = adapter.getItemCount();
                 arrayItem.addAll(moreOpere);
