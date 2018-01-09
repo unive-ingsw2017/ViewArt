@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -34,7 +35,6 @@ public class FilterActivity extends AppCompatActivity implements SearchView.OnQu
     private ListView autori;
     private ListView date;
     private ListView tipologie;
-    private SearchView searchbar;
     private CustomAdapterChecked adapterAutori;
     private CustomAdapterChecked adapterTipologie;
     private CustomAdapterChecked adapterDate;
@@ -70,20 +70,20 @@ public class FilterActivity extends AppCompatActivity implements SearchView.OnQu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
 
-        autori = (ListView) findViewById(R.id.autori);
+        autori = findViewById(R.id.autori);
         adapterAutori = new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(AUTORI, AUTORE), AUTORI, AUTORE);
         autori.setAdapter(adapterAutori);
         autori.setItemsCanFocus(false);
 
-        date = (ListView) findViewById(R.id.date);
+        date = findViewById(R.id.date);
         adapterDate = new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(DATE, DATA), DATE, DATA);
         date.setAdapter(adapterDate);
 
-        tipologie = (ListView) findViewById(R.id.tipologie);
+        tipologie = findViewById(R.id.tipologie);
         adapterTipologie = new CustomAdapterChecked(this, R.layout.activity_filter, retriveInformation(TIPOLOGIE, TIPOLOGIA), TIPOLOGIE, TIPOLOGIA);
         tipologie.setAdapter(adapterTipologie);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
@@ -108,7 +108,7 @@ public class FilterActivity extends AppCompatActivity implements SearchView.OnQu
 
     ArrayList<SimpleEntry<String, Integer>> retriveFilteredInformation(String tabella, String colonna, String filtro) {
         ArrayList<SimpleEntry<String, Integer>> buffer = new ArrayList<>();
-        Cursor cr = MapsActivity.db.getDatabaseAccess().rawQuery("SELECT * FROM " + tabella + " WHERE "+colonna+" LIKE '%"+filtro+"%' order by selezionato desc", null);
+        Cursor cr = MapsActivity.db.getDatabaseAccess().rawQuery("SELECT * FROM " + tabella + " WHERE " + colonna + " LIKE '%" + filtro + "%' order by selezionato desc", null);
 
         while (cr.moveToNext())
             buffer.add(new SimpleEntry<>(cr.getString(cr.getColumnIndex(colonna)), cr.getInt(cr.getColumnIndex("selezionato"))));
@@ -134,20 +134,20 @@ public class FilterActivity extends AppCompatActivity implements SearchView.OnQu
         inflater.inflate(R.menu.options_menu, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search)
-                .getActionView();
-        searchView.setSearchableInfo(searchManager
-                .getSearchableInfo(getComponentName()));
+        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
-        searchView.setSubmitButtonEnabled(true);
+        searchView.setSubmitButtonEnabled(false);
         searchView.setOnQueryTextListener(this);
 
         return true;
     }
 
     @Override
-    public boolean onQueryTextSubmit(String s) { // prima versione senza live search
-        return false;
+    public boolean onQueryTextSubmit(String s) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        return true;
     }
 
     @Override
@@ -155,7 +155,6 @@ public class FilterActivity extends AppCompatActivity implements SearchView.OnQu
         adapterTipologie.getFilter().filter(s);
         adapterAutori.getFilter().filter(s);
         adapterDate.getFilter().filter(s);
-
         return false;
     }
 }
