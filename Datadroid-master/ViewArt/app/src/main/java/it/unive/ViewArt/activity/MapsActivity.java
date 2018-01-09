@@ -14,13 +14,11 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -85,6 +83,7 @@ public class MapsActivity extends AppCompatActivity
     public static DbManager db = null;
     public static SparseArray<Opera> opereArray = new SparseArray<>();
     private static long back_pressed;
+    private static boolean firstTime = true;
     /**
      * Questo oggetto è la mappa di Google Maps. Viene inizializzato asincronamente dal metodo {@code onMapsReady}.
      */
@@ -112,7 +111,6 @@ public class MapsActivity extends AppCompatActivity
     protected Marker hereMarker = null;
     private ClusterManager<Opera> mClusterManager;
     private Opera clickedItem;
-    private static boolean firstTime = true;
 
     /**
      * Questo metodo viene invocato quando viene inizializzata questa activity.
@@ -132,7 +130,6 @@ public class MapsActivity extends AppCompatActivity
             creaArray();
         }
         // inizializza le preferenze
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         // trova gli oggetti che rappresentano i bottoni e li salva come campi d'istanza
         button_here = (ImageButton) findViewById(R.id.button_here);
@@ -600,13 +597,16 @@ public class MapsActivity extends AppCompatActivity
         }
     }
 
+    public MapsActivity getContext() {
+        return this;
+    }
+
     public class CustomInfoViewAdapter implements GoogleMap.InfoWindowAdapter {
+        private final LayoutInflater mInflater;
         private boolean isImageLoaded;
 
-        private final LayoutInflater mInflater;
-
         public CustomInfoViewAdapter(LayoutInflater inflater) {
-            isImageLoaded= false;
+            isImageLoaded = false;
             this.mInflater = inflater;
         }
 
@@ -652,10 +652,6 @@ public class MapsActivity extends AppCompatActivity
             return null;
         }
 
-    }
-
-    public MapsActivity getContext() {
-        return this;
     }
 
 

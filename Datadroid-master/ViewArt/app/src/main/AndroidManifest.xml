@@ -47,7 +47,8 @@
 
         <activity
             android:name="it.unive.ViewArt.activity.InfoActivity"
-            android:parentActivityName="it.unive.ViewArt.activity.MapsActivity">
+            android:parentActivityName="it.unive.ViewArt.activity.MapsActivity"
+            android:label="ViewArt - Credits">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="it.unive.ViewArt.activity.MapsActivity" />

@@ -187,7 +187,7 @@ public class Opera implements ClusterItem {
     }
 
     public boolean toSet() {
-        return bene_culturale == null;
+        return localizzazione == null;
     }
 
 }

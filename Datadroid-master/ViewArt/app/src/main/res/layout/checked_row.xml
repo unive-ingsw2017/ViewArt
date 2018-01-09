@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayoutChecked"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:minHeight="50dp"
-    android:padding="8dp"
-    android:id="@+id/relativeLayoutChecked">
+    android:padding="8dp">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/check_text"

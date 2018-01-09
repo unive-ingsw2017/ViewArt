@@ -24,13 +24,7 @@
     <string name="menu_mapStyle_terrain">Terreno</string>
     <string name="menu_mapStyle_hybrid">Ibrido</string>
 
-    <string name="credits_year">2017</string>
-    <string name="credits_project">CEVID</string>
-    <string name="credits_company">Università Ca\' Foscari Venezia</string>
-    <string name="credits_authors">Alvise Spanò</string>
-
-    <string name="action_info">Info</string>
-    <string name="action_impostazioni">Impostazioni</string>
+    <string name="action_info">Credits</string>
 
     <string name="msg_loading">Caricamento…</string>
     <string name="msg_button_car">Pulsante premuto</string>
@@ -44,7 +38,6 @@
     <string name="tipologia">Tipologia</string>
     <string name="data">Data</string>
     <string name="filtri">Filtri</string>
-    <string name="search_title">Cerca...</string>
     <string name="titolo">Titolo</string>
 
 </resources>

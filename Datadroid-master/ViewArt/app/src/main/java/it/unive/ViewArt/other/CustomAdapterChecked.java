@@ -10,13 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
-import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import it.unive.ViewArt.R;
