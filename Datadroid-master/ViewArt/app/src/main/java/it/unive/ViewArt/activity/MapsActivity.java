@@ -601,11 +601,12 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public class CustomInfoViewAdapter implements GoogleMap.InfoWindowAdapter {
-        private String previousImageUrl;
+        private boolean isImageLoaded;
 
         private final LayoutInflater mInflater;
 
         public CustomInfoViewAdapter(LayoutInflater inflater) {
+            isImageLoaded= false;
             this.mInflater = inflater;
         }
 
@@ -633,11 +634,11 @@ public class MapsActivity extends AppCompatActivity
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, Transition<? super Drawable> transition) {
                                 img.setImageDrawable(resource);
-                                String url = clickedItem.getImgUrl();
-                                if (!TextUtils.equals(url, previousImageUrl) && marker.isInfoWindowShown()) {
-                                    previousImageUrl = url;
+                                if (!isImageLoaded) {
+                                    isImageLoaded = true;
                                     marker.showInfoWindow();
                                 }
+                                isImageLoaded = false;
 
                             }
                         });
