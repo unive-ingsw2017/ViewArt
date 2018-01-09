@@ -634,7 +634,7 @@ public class MapsActivity extends AppCompatActivity
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, Transition<? super Drawable> transition) {
                                 img.setImageDrawable(resource);
-                                if (!isImageLoaded) {
+                                if (!isImageLoaded && marker.isInfoWindowShown()) {
                                     isImageLoaded = true;
                                     marker.showInfoWindow();
                                 }
