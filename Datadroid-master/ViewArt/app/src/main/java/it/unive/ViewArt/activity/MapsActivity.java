@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.Image;
 import android.net.Uri;
@@ -20,6 +22,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -32,6 +35,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -59,10 +69,12 @@ import com.google.maps.android.clustering.ClusterManager.OnClusterClickListener;
 import com.google.maps.android.clustering.ClusterManager.OnClusterItemInfoWindowClickListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import it.unive.ViewArt.R;
 import it.unive.ViewArt.database.DbManager;
-import it.unive.ViewArt.other.ImageDownloaderTask;
+import it.unive.ViewArt.other.GlideApp;
 import it.unive.ViewArt.other.Opera;
 
 
@@ -594,6 +606,7 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public class CustomInfoViewAdapter implements GoogleMap.InfoWindowAdapter {
+        private String previousImageUrl;
 
         private final LayoutInflater mInflater;
 
@@ -606,45 +619,46 @@ public class MapsActivity extends AppCompatActivity
         public View getInfoWindow(Marker marker) {
             View view = mInflater.inflate(R.layout.info_window, null);
 
-            TextView name_tv = view.findViewById(R.id.name);
-            TextView details_tv = view.findViewById(R.id.details);
+            TextView name_tv = view.findViewById(R.id.title);
+            TextView details_tv = view.findViewById(R.id.snippet);
             ImageView img = view.findViewById(R.id.pic);
 
 
 
             name_tv.setText(clickedItem.getTitle());
             details_tv.setText(clickedItem.getSnippet());
-            ImageView immagine = (ImageView) findViewById(R.id.pic);
 
-            boolean not_first_time_showing_info_window= false;
-            if (not_first_time_showing_info_window) {
-                Glide.with(ActivityClass.this).load(restaurantPictureURL).into(imgInfoWindowPicture);
-            } else { // if it's the first time, load the image with the callback set
-                not_first_time_showing_info_window=true;
-                Glide.with(ActivityClass.this).load(restaurantPictureURL).into(imgInfoWindowPicture,new InfoWindowRefresher(marker));
-            }
+
+            GlideApp.with(getContext()).load(clickedItem.getImgUrl())
+                    .override(200, 300) // made the difference
+                    .centerCrop()
+                    .into(new SimpleTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                            img.setImageDrawable(resource);
+                            String url= clickedItem.getImgUrl();
+                            if (!TextUtils.equals(url, previousImageUrl)) {
+                                previousImageUrl = url;
+                                marker.showInfoWindow();
+                            }
+
+                        }
+                    });
             return view;
         }
+
 
         @Override
         public View getInfoContents(Marker marker) {
             return null;
         }
+
     }
 
-    private class InfoWindowRefresher implements Callback {
-        private Marker markerToRefresh;
-
-        private InfoWindowRefresher(Marker markerToRefresh) {
-            this.markerToRefresh = markerToRefresh;
-        }
-
-        @Override
-        public void onSuccess() {
-            markerToRefresh.showInfoWindow();
-        }
-
-        @Override
-        public void onError() {}
+    public MapsActivity getContext(){
+        return this;
     }
+
+
+
 }
