@@ -623,7 +623,6 @@ public class MapsActivity extends AppCompatActivity
 
             if (clickedItem.getImgUrl().equals("")) {
                 img.setImageDrawable(img.getContext().getDrawable(R.drawable.no_image));
-                marker.showInfoWindow();
             } else {
                 GlideApp.with(getContext())
                         .load(clickedItem.getImgUrl())
