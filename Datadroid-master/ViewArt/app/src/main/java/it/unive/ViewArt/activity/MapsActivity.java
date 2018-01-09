@@ -453,7 +453,7 @@ public class MapsActivity extends AppCompatActivity
         if (firstTime) {
             filteredAction();
             firstTime = false;
-        } else if (getIntent().getBooleanExtra("Filtri", false) && filterNumber() > 0)
+        } else if (getIntent().getBooleanExtra("Filtri", false) || filterNumber() > 0)
             filteredAction();
         else
             defaultAction();
