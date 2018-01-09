@@ -6,6 +6,7 @@ package it.unive.ViewArt.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -32,6 +33,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -67,7 +69,6 @@ import it.unive.ViewArt.R;
 import it.unive.ViewArt.database.DbManager;
 import it.unive.ViewArt.other.GlideApp;
 import it.unive.ViewArt.other.Opera;
-
 
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback,
@@ -436,7 +437,7 @@ public class MapsActivity extends AppCompatActivity
                         return false;
                     }
                 });
-        mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new CustomInfoViewAdapter(LayoutInflater.from(this)));
+        mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new CustomInfoViewAdapter(getApplicationContext(),LayoutInflater.from(this)));
 
 
         // Point the map's listeners at the listeners implemented by the cluster
@@ -601,13 +602,15 @@ public class MapsActivity extends AppCompatActivity
     }
 
     public class CustomInfoViewAdapter implements GoogleMap.InfoWindowAdapter {
+
         private boolean isImageLoaded;
-
         private final LayoutInflater mInflater;
+        private Context context;
 
-        public CustomInfoViewAdapter(LayoutInflater inflater) {
+        public CustomInfoViewAdapter(Context context,LayoutInflater inflater) {
             isImageLoaded= false;
             this.mInflater = inflater;
+            this.context = context;
         }
 
 
@@ -625,11 +628,11 @@ public class MapsActivity extends AppCompatActivity
             if (clickedItem.getImgUrl().equals("")) {
                 img.setImageDrawable(img.getContext().getDrawable(R.drawable.no_image));
             } else {
-                GlideApp.with(getContext())
+                GlideApp.with(context)
                         .load(clickedItem.getImgUrl())
                         .fitCenter()
                         .error(R.drawable.no_image)
-                        .encodeQuality(50)
+                        .encodeQuality(30)
                         .into(new SimpleTarget<Drawable>() {
                             @Override
                             public void onResourceReady(@NonNull Drawable resource, Transition<? super Drawable> transition) {
@@ -652,10 +655,6 @@ public class MapsActivity extends AppCompatActivity
             return null;
         }
 
-    }
-
-    public MapsActivity getContext() {
-        return this;
     }
 
 
