@@ -34,7 +34,6 @@ import static it.unive.ViewArt.database.DatabaseStrings.TITOLO;
 
 
 public class DBhelper extends SQLiteOpenHelper {
-    public static final String DBNAME = "ViewArt";
     // Data Base Name.
     private static final String DATABASE_NAME = "ViewArt";
     // Data Base Version.

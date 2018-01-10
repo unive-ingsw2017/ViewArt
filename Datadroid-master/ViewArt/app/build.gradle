@@ -7,7 +7,7 @@ android {
             keyPassword 'ViewArt'
         }
     }
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId 'it.unive.ViewArt'
         minSdkVersion 22
@@ -38,6 +38,7 @@ repositories {
     maven {
         url "https://maven.google.com"
     }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -53,15 +54,17 @@ dependencies {
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.9'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'jp.wasabeef:recyclerview-animators:2.2.3'
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:support-v4:26.1.0'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support:support-v4:27.0.2'
+    compile 'com.android.support:design:27.0.2'
+    compile 'com.android.support:recyclerview-v7:27.0.2'
+    compile 'com.android.support:design:27.0.2'
+    compile 'com.android.support:recyclerview-v7:27.0.2'
     implementation ("com.github.bumptech.glide:glide:4.5.0") {
         exclude group: "com.android.support"
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
-    implementation "com.android.support:support-fragment:26.1.0"
+    implementation "com.android.support:support-fragment:27.0.2"
+    compile 'com.github.chathuralakmal:AndroidImagePopup:1.2.1'
+
 }

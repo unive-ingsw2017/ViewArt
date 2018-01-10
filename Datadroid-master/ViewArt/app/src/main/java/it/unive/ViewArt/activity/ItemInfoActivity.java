@@ -15,6 +15,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ceylonlabs.imageviewpopup.ImagePopup;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,6 +63,21 @@ public class ItemInfoActivity extends AppCompatActivity {
                     .into(immagine);
         }
 
+        final ImagePopup imagePopup = new ImagePopup(this);
+        imagePopup.setBackgroundColor(this.getResources().getColor(R.color.trans50));
+        imagePopup.setFullScreen(true);
+        imagePopup.setHideCloseIcon(false);
+        imagePopup.setImageOnClickClose(true);
+        imagePopup.initiatePopupWithPicasso(opera.getImgUrl());
+
+        immagine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imagePopup.viewPopup();
+
+            }
+        });
+
         ListView information = findViewById(R.id.listViewInfo);
 
         List<String> buffer = new ArrayList<>();
@@ -105,4 +122,6 @@ public class ItemInfoActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
+
 }
