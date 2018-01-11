@@ -49,14 +49,14 @@ public class CustomAdapterChecked extends ArrayAdapter<SimpleEntry<String, Integ
             convertView = layoutInflater.inflate(R.layout.checked_row, null);
 
             holder = new ViewHolder();
-            holder.text = (TextView) convertView.findViewById(R.id.check_text);
-            holder.checkBox = (CheckBox) convertView.findViewById(R.id.my_checkbox);
+            holder.text = convertView.findViewById(R.id.check_text);
+            holder.checkBox = convertView.findViewById(R.id.my_checkbox);
 
             convertView.setTag(holder);
 
             convertView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    CheckBox cb = (CheckBox) v.findViewById(R.id.my_checkbox);
+                    CheckBox cb = v.findViewById(R.id.my_checkbox);
                     Map.Entry<String, Integer> entry = (SimpleEntry<String, Integer>) cb.getTag();
 
                     if (cb.isChecked()) {
@@ -160,12 +160,6 @@ public class CustomAdapterChecked extends ArrayAdapter<SimpleEntry<String, Integ
             return filterResults;
         }
 
-        /**
-         * Notify about filtered list to ui
-         *
-         * @param constraint text
-         * @param results    filtered result
-         */
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
@@ -174,5 +168,8 @@ public class CustomAdapterChecked extends ArrayAdapter<SimpleEntry<String, Integ
         }
     }
 
+    public void aggiorna(){
+        notifyDataSetChanged();
+    }
 
 }

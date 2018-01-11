@@ -32,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.common.ConnectionResult;
@@ -84,7 +83,6 @@ public class MapsActivity extends AppCompatActivity
     public static DbManager db = null;
     public static SparseArray<Opera> opereArray = new SparseArray<>();
     private static long back_pressed;
-    private static boolean firstTime = true;
     /**
      * Questo oggetto è la mappa di Google Maps. Viene inizializzato asincronamente dal metodo {@code onMapsReady}.
      */
@@ -93,7 +91,7 @@ public class MapsActivity extends AppCompatActivity
      * Pulsanti in sovraimpressione gestiti da questa app. Da non confondere con i pulsanti che GoogleMaps mette in sovraimpressione e che non
      * fanno parte degli oggetti gestiti manualmente dal codice.
      */
-    protected ImageButton button_here, button_car;
+    protected ImageButton button_here;
     /**
      * API per i servizi di localizzazione.
      */
@@ -133,8 +131,7 @@ public class MapsActivity extends AppCompatActivity
         // inizializza le preferenze
 
         // trova gli oggetti che rappresentano i bottoni e li salva come campi d'istanza
-        button_here = (ImageButton) findViewById(R.id.button_here);
-        button_car = (ImageButton) findViewById(R.id.button_car);
+        button_here = findViewById(R.id.button_here);
 
         // API per i servizi di localizzazione
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -155,7 +152,7 @@ public class MapsActivity extends AppCompatActivity
                     MarkerOptions opts = new MarkerOptions();
                     opts.position(currentPosition);
                     opts.title(getString(R.string.marker_title));
-                    opts.snippet(String.format("lat: %glng: %g", currentPosition.latitude, currentPosition.longitude));
+                    opts.snippet(String.format("lat: %g lng: %g", currentPosition.latitude, currentPosition.longitude));
                     hereMarker = gMap.addMarker(opts);
                     if (gMap != null)
                         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, getResources().getInteger(R.integer.zoomFactor_button_here)));
@@ -434,7 +431,8 @@ public class MapsActivity extends AppCompatActivity
                         return false;
                     }
                 });
-        mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new CustomInfoViewAdapter(getApplicationContext(),LayoutInflater.from(this)));
+
+        mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new CustomInfoViewAdapter(getApplicationContext(), LayoutInflater.from(this)));
 
 
         // Point the map's listeners at the listeners implemented by the cluster
@@ -447,10 +445,7 @@ public class MapsActivity extends AppCompatActivity
 
 
         //Decide se creare la visualizzazione da primo avvio o se ci sono dei filtri da applicare
-        if (firstTime) {
-            filteredAction();
-            firstTime = false;
-        } else if (getIntent().getBooleanExtra("Filtri", false) || filterNumber() > 0)
+        if (filterNumber() > 0)
             filteredAction();
         else
             defaultAction();
@@ -608,8 +603,8 @@ public class MapsActivity extends AppCompatActivity
         private final LayoutInflater mInflater;
         private Context context;
 
-        public CustomInfoViewAdapter(Context context,LayoutInflater inflater) {
-            isImageLoaded= false;
+        public CustomInfoViewAdapter(Context context, LayoutInflater inflater) {
+            isImageLoaded = false;
             this.mInflater = inflater;
             this.context = context;
         }
