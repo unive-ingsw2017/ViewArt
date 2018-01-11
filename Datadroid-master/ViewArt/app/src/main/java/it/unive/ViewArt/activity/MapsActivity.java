@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -133,6 +134,7 @@ public class MapsActivity extends AppCompatActivity
         // trova gli oggetti che rappresentano i bottoni e li salva come campi d'istanza
         button_here = findViewById(R.id.button_here);
 
+        new ClearDiskCache().execute(this);
         // API per i servizi di localizzazione
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -160,6 +162,14 @@ public class MapsActivity extends AppCompatActivity
                     Log.d(TAG, "no current position available");
             }
         });
+    }
+
+    private static class ClearDiskCache extends AsyncTask<Context, Void, Void>{
+        @Override
+        protected Void doInBackground(Context... contexts) {
+            GlideApp.get(contexts[0]).clearDiskCache();
+            return null;
+        }
     }
 
     /**
